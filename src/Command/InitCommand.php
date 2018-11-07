@@ -10,7 +10,6 @@ namespace App\Command;
 
 
 use App\Entity\ObjectParameter;
-use App\Kernel;
 use Doctrine\ORM\EntityManagerInterface;
 use GuzzleHttp\Client;
 use Symfony\Component\Console\Command\Command;
@@ -72,7 +71,7 @@ class InitCommand extends Command
             $this->em->createQueryBuilder()
                 ->update(ObjectParameter::class, 'op')
                 ->where('op.name = \'objectId\'')
-                ->set('op.value', (string)$objectIdFromServer)
+                ->set('op.value', "'$objectIdFromServer'")
                 ->getQuery()
                 ->execute();
         }
