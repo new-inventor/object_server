@@ -35,5 +35,18 @@ class Trigger
      */
     private $content;
 
+    /**
+     * Trigger constructor.
+     * @param int $id
+     * @param int|null $status
+     * @param null|string $content
+     */
+    public function __construct(int $id, ?int $status, ?string $content)
+    {
+        $this->id = $id;
+        $this->status = $status;
+        $this->content = $content;
+    }
+
 
 }

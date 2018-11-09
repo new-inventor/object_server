@@ -28,5 +28,16 @@ class SensorType
      */
     private $title;
 
+    /**
+     * SensorType constructor.
+     * @param int $id
+     * @param null|string $title
+     */
+    public function __construct(int $id, ?string $title)
+    {
+        $this->id = $id;
+        $this->title = $title;
+    }
+
 
 }

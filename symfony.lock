@@ -161,6 +161,9 @@
     "symfony/http-kernel": {
         "version": "v4.1.7"
     },
+    "symfony/inflector": {
+        "version": "v4.1.7"
+    },
     "symfony/maker-bundle": {
         "version": "1.0",
         "recipe": {
@@ -175,6 +178,9 @@
     },
     "symfony/polyfill-mbstring": {
         "version": "v1.10.0"
+    },
+    "symfony/property-access": {
+        "version": "v4.1.7"
     },
     "symfony/routing": {
         "version": "4.0",

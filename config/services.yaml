@@ -26,5 +26,12 @@ services:
         resource: '../src/Controller'
         tags: ['controller.service_arguments']
 
+    App\Service\ApiServise:
+        arguments:
+            $domain: '%env(string:WEB_SERVER_DOMAIN)%'
+            $uriPrefix: '%env(string:WEB_SERVER_URI_PREFIX)%'
+            $token: '%env(string:TOKEN)%'
+            $accountToken: '%env(string:ACCOUNT_TOKEN)%'
+
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
