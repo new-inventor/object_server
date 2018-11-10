@@ -22,7 +22,7 @@ class Sensor
     private $id;
 
     /**
-     * @var \SensorType
+     * @var SensorType
      *
      * @ORM\ManyToOne(targetEntity="SensorType")
      * @ORM\JoinColumns({
@@ -30,6 +30,27 @@ class Sensor
      * })
      */
     private $sensorType;
+
+    /**
+     * @var Controller
+     *
+     * @ORM\ManyToOne(targetEntity="Controller")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="controller_id", referencedColumnName="id")
+     * })
+     */
+    private $controller;
+
+    /**
+     * Sensor constructor.
+     * @param SensorType $sensorType
+     * @param Controller $controller
+     */
+    public function __construct(SensorType $sensorType, Controller $controller)
+    {
+        $this->sensorType = $sensorType;
+        $this->controller = $controller;
+    }
 
 
 }

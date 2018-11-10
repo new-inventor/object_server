@@ -23,7 +23,7 @@ class Actuator
     private $id;
 
     /**
-     * @var \ActuatorType
+     * @var ActuatorType
      *
      * @ORM\ManyToOne(targetEntity="ActuatorType")
      * @ORM\JoinColumns({
@@ -33,7 +33,7 @@ class Actuator
     private $actuatorType;
 
     /**
-     * @var \Controller
+     * @var Controller
      *
      * @ORM\ManyToOne(targetEntity="Controller")
      * @ORM\JoinColumns({
