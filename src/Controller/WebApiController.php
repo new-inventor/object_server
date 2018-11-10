@@ -43,7 +43,7 @@ class WebApiController
             $conn = $this->em->getConnection();
             $stmt = $conn->prepare($storedProcedureSQL);
             $stmt->bindParam(':hash', $var);
-            $res = $stmt->fetchColumn('@item');
+            $res = $stmt->fetch();
             var_dump($res);
             if($res['item'] === 0){
                 return new JsonResponse(['json' => ['updates' => 'has updates', 'object_id' => $parameter[0]->getValue()]], 200);
