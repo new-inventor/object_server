@@ -39,6 +39,6 @@ class WebApiController
             return new JsonResponse(['json' => ['updates' => 'no updates', 'object_id' => $parameter[0]->getValue()]],
                 200);
         }
-        return new JsonResponse(['result' => 'error', 'message' => 'Object did not initialised.'], 424);
+        return new JsonResponse(['result' => 'error', 'message' => 'Object did not initialised.'], 200);
     }
 }

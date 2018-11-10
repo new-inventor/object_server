@@ -51,19 +51,30 @@ class ApiService
     public function __construct(
         string $domain,
         string $uriPrefix,
-        string $token,
         string $accountToken,
         EntityManagerInterface $em
     ) {
         $this->uriPrefix = $uriPrefix;
-        $this->token = $token;
+        $this->em = $em;
+        /** @var ObjectParameter[] $objectToken */
+        $objectToken = $this->em->createQueryBuilder()
+            ->select('op')
+            ->from(ObjectParameter::class, 'op')
+            ->where('op.name = :name')
+            ->setParameter('name', 'objectToken')
+            ->getQuery()
+            ->getResult();
+        if(\count($objectToken) > 0){
+            $this->token = $objectToken[0]->getValue();
+        }else{
+            $this->token = '';
+        }
         $this->accountToken = $accountToken;
 
         $this->client = new Client([
             'base_uri' => $domain,
             'timeout' => 2.0
         ]);
-        $this->em = $em;
     }
 
     protected function makeApiRequest(
@@ -71,6 +82,30 @@ class ApiService
         $mainParams,
         $useAccountToken
     ) {
+        $response = $this->getApiResponse($path, $mainParams, $useAccountToken);
+        $statusCode = $response->getStatusCode();
+
+        if ($statusCode !== 200) {
+            throw new Error('Server responded with status ' . $statusCode . '. Error message: ' . $response->getBody()->getContents());
+        }
+
+        return $response->getBody()->getContents();
+    }
+
+    public function getApiResponse(
+        string $path,
+        $mainParams,
+        $useAccountToken
+    )
+    {
+        return $this->client->post(
+            $this->uriPrefix . $path,
+            ['form_params' => $this->initParameters($mainParams, $useAccountToken)]
+        );
+    }
+
+    public function initParameters($mainParams, bool $useAccountToken)
+    {
         $params = [
             'json' => json_encode($mainParams),
             'token' => $this->token,
@@ -80,14 +115,7 @@ class ApiService
             $params['account_token'] = $this->accountToken;
         }
 
-        $response = $this->client->post($this->uriPrefix . $path, ['form_params' => $params]);
-        $statusCode = $response->getStatusCode();
-
-        if ($statusCode !== 200) {
-            throw new Error('Server responded with status ' . $statusCode . '. Error message: ' . $response->getBody()->getContents());
-        }
-
-        return $response->getBody()->getContents();
+        return $params;
     }
 
     public function initObject(string $title, string $address): int
@@ -107,13 +135,12 @@ class ApiService
         $this->createOrUpdateParameter('objectToken', $objectToken);
         $this->em->flush();
         $this->em->clear();
-        var_dump($objectId, $objectToken);
-        die();
         return (int)$objectId;
     }
 
     public function createOrUpdateParameter(string $name, $value)
     {
+        return;
         $parameter = $this->em->createQueryBuilder()
             ->select('op')
             ->from(ObjectParameter::class, 'op')
@@ -176,5 +203,10 @@ class ApiService
         $this->em->clear();
     }
 
+    public function resetIpAddress(): bool
+    {
+        $response = $this->getApiResponse('/state/resetIp', [], true);
+        return $response->getStatusCode() === 200;
+    }
 
 }
