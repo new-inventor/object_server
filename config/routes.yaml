@@ -1,3 +1,3 @@
-index:
-   path: /getValue
-   controller: App\Controller\MainController::getValue
+main_re:
+   path: /main/getUpdates
+   controller: App\Controller\WebApiController::getUpdates
