@@ -122,7 +122,7 @@ class ApiService
             ->getQuery()
             ->getResult();
         if (\count($parameter) === 0) {
-            $parameter = new ObjectParameter('objectToken', '' . $value);
+            $parameter = new ObjectParameter($name, '' . $value);
             $this->em->persist($parameter);
         } else {
             $this->em->createQueryBuilder()
