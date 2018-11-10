@@ -26,14 +26,18 @@ class WebApiController
     }
 
     public function getUpdates() {
-        /** @var ObjectParameter[] $parameter */
-        $parameter = $this->em->createQueryBuilder()
-            ->select('op')
-            ->from(ObjectParameter::class, 'op')
-            ->where('op.name = :name')
-            ->setParameter('name', 'objectId')
-            ->getQuery()
-            ->getResult();
+        try {
+            /** @var ObjectParameter[] $parameter */
+            $parameter = $this->em->createQueryBuilder()
+                ->select('op')
+                ->from(ObjectParameter::class, 'op')
+                ->where('op.name = :name')
+                ->setParameter('name', 'objectId')
+                ->getQuery()
+                ->getResult();
+        } catch (\Throwable $e) {
+            return new JsonResponse(['result' => 'error', 'message' => $e->getMessage(), 'trace' => $e->getTraceAsString()], 500);
+        }
         if (\count($parameter) > 0) {
             return new JsonResponse(['json' => ['updates' => 'no updates', 'object_id' => $parameter[0]->getValue()]], 304);
         }
