@@ -97,6 +97,7 @@ class ApiService
             'object_adress' => $address
         ], true);
         $content = json_decode($content, true);
+        var_dump($content);
         $objectId = $content['object']['object_id'];
         $objectToken = $content['object']['object_token'];
         if ($objectId === null || $objectId === false) {
