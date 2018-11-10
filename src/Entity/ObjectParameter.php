@@ -46,5 +46,20 @@ class ObjectParameter
         $this->value = $value;
     }
 
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getValue(): ?string
+    {
+        return $this->value;
+    }
 
 }
