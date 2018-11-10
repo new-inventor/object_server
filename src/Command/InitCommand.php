@@ -10,7 +10,7 @@ namespace App\Command;
 
 
 use App\Entity\ObjectParameter;
-use App\Service\ApiServise;
+use App\Service\ApiService;
 use App\Service\AppService;
 use Doctrine\ORM\EntityManagerInterface;
 use GuzzleHttp\Client;
@@ -29,11 +29,11 @@ class InitCommand extends Command
      */
     private $em;
     /**
-     * @var ApiServise
+     * @var ApiService
      */
     private $apiServise;
 
-    public function __construct(?string $name = null, EntityManagerInterface $em, ApiServise $apiServise)
+    public function __construct(?string $name = null, EntityManagerInterface $em, ApiService $apiServise)
     {
         parent::__construct($name);
         $this->em = $em;
@@ -46,8 +46,7 @@ class InitCommand extends Command
             ->setName('app:init')
             ->setDescription('Первично инициализировать сервер объекта')
             ->addArgument('objectTitle', InputArgument::REQUIRED, 'Название объекта')
-            ->addArgument('objectAddress', InputArgument::REQUIRED, 'Аддрес объекта')
-        ;
+            ->addArgument('objectAddress', InputArgument::REQUIRED, 'Аддрес объекта');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
