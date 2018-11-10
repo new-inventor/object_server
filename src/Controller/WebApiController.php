@@ -44,7 +44,7 @@ class WebApiController
             $rsm->addScalarResult('result', 'result');
             $query = $this->em->createNativeQuery('SELECT match_object_hash(?) as result;', $rsm);
             $query->setParameter(1, $var);
-            $res = $query->getResult()[0]['result'];
+            $res = (int)$query->getResult()[0]['result'];
             var_dump($res);
             if($res === 0){
                 return new JsonResponse(['json' => ['updates' => 'has updates', 'object_id' => $parameter[0]->getValue()]], 200);
