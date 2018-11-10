@@ -28,16 +28,16 @@ class WebApiController
     public function getUpdates()
     {
         /** @var ObjectParameter[] $parameter */
-//        $parameter = $this->em->createQueryBuilder()
-//            ->select('op')
-//            ->from(ObjectParameter::class, 'op')
-//            ->where('op.name = :name')
-//            ->setParameter('name', 'objectId')
-//            ->getQuery()
-//            ->getResult();
-        if (true || \count($parameter) > 0) {
+        $parameter = $this->em->createQueryBuilder()
+            ->select('op')
+            ->from(ObjectParameter::class, 'op')
+            ->where('op.name = :name')
+            ->setParameter('name', 'objectId')
+            ->getQuery()
+            ->getResult();
+        if (\count($parameter) > 0) {
             return new JsonResponse(['json' => ['updates' => 'no updates', 'object_id' => $parameter[0]->getValue()]],
-                304);
+                200);
         }
         return new JsonResponse(['result' => 'error', 'message' => 'Object did not initialised.'], 424);
     }
