@@ -39,7 +39,7 @@ class WebApiController
             ->getResult();
         if (\count($parameter) > 0) {
             $var = '12123123123';
-            $storedProcedureSQL = "call match_object_hash(@item, :hash);select @item;";
+            $storedProcedureSQL = "SELECT match_object_hash(:hash) as result;";
             $conn = $this->em->getConnection();
             $stmt = $conn->prepare($storedProcedureSQL);
             $stmt->bindParam(':hash', $var);

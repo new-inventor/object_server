@@ -29,6 +29,6 @@ final class Version20181110145210 extends AbstractMigration
     public function down(Schema $schema) : void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->addSql('Drop Procedure make_object_hash(OUT isMatch BOOLEAN, IN webServerObjectHash VARCHAR(255))');
+        $this->addSql('Drop Procedure match_object_hash(OUT isMatch BOOLEAN, IN webServerObjectHash VARCHAR(255))');
     }
 }
