@@ -2,8 +2,8 @@
 /**
  * Created by IntelliJ IDEA.
  * User: george
- * Date: 10.11.18
- * Time: 17:01
+ * Date: 11.11.18
+ * Time: 17:06
  */
 
 namespace App\Command;
@@ -14,32 +14,30 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class SetIpAddress extends Command
+class SendDevices extends Command
 {
     /**
      * @var ApiService
      */
-    private $apiServise;
+    private $apiService;
 
     public function __construct(?string $name = null, ApiService $apiService)
     {
         parent::__construct($name);
-        $this->apiServise = $apiService;
+        $this->apiService = $apiService;
     }
 
     protected function configure()
     {
         $this
-            ->setName('app:reset-ip')
-            ->setDescription('Первично инициализировать сервер объекта');
+            ->setName('app:send-devices')
+            ->setDescription('Отправить девайсы');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        if ($this->apiServise->resetIpAddress()) {
-            $output->writeln('Ip reset success.');
-        } else {
-            $output->writeln('Ip reset failed.');
-        }
+        $devices = $this->apiService->getDevises();
+        $result = $this->apiService->makeApiRequest('/objects/syncDevices', $devices, false);
+        $output->writeln('Synchronisation complete');
     }
 }

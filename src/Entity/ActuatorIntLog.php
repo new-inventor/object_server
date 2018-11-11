@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="actuator_int_log", indexes={@ORM\Index(name="FK_actuator_int_log_actuator", columns={"actuator_id"})})
  * @ORM\Entity
  */
-class ActuatorIntLog
+class ActuatorIntLog extends AbstractEntity
 {
     /**
      * @var int
@@ -44,6 +44,70 @@ class ActuatorIntLog
      * })
      */
     private $actuator;
+
+    /**
+     * @return int
+     */
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param int $id
+     */
+    public function setId(int $id): void
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getValue(): ?int
+    {
+        return $this->value;
+    }
+
+    /**
+     * @param int|null $value
+     */
+    public function setValue(?int $value): void
+    {
+        $this->value = $value;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getCreated(): ?int
+    {
+        return $this->created;
+    }
+
+    /**
+     * @param int|null $created
+     */
+    public function setCreated(?int $created): void
+    {
+        $this->created = $created;
+    }
+
+    /**
+     * @return \Actuator
+     */
+    public function getActuator(): \Actuator
+    {
+        return $this->actuator;
+    }
+
+    /**
+     * @param \Actuator $actuator
+     */
+    public function setActuator(\Actuator $actuator): void
+    {
+        $this->actuator = $actuator;
+    }
 
 
 }

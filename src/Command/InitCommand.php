@@ -55,6 +55,7 @@ class InitCommand extends Command
             $input->getArgument('objectTitle'),
             $input->getArgument('objectAddress')
         );
-        $this->apiServise->syncStructure($objectId);
+//        $this->apiServise->syncStructure($objectId);
+        $this->apiServise->syncTypes();
     }
 }

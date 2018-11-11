@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="event_type")
  * @ORM\Entity
  */
-class EventType
+class EventType extends AbstractEntity
 {
     /**
      * @var int
@@ -26,6 +26,22 @@ class EventType
      * @param int $id
      */
     public function __construct(int $id)
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * @return int
+     */
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param int $id
+     */
+    public function setId(int $id): void
     {
         $this->id = $id;
     }

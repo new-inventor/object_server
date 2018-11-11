@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="element_sensor", indexes={@ORM\Index(name="FK_element_sensor_element", columns={"element_id"}), @ORM\Index(name="FK_element_sensor_sensor", columns={"sensor_id"})})
  * @ORM\Entity
  */
-class ElementSensor
+class ElementSensor extends AbstractEntity
 {
     /**
      * @var int
@@ -40,6 +40,54 @@ class ElementSensor
      * })
      */
     private $sensor;
+
+    /**
+     * @return int
+     */
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param int $id
+     */
+    public function setId(int $id): void
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * @return \Element
+     */
+    public function getElement(): \Element
+    {
+        return $this->element;
+    }
+
+    /**
+     * @param \Element $element
+     */
+    public function setElement(\Element $element): void
+    {
+        $this->element = $element;
+    }
+
+    /**
+     * @return \Sensor
+     */
+    public function getSensor(): \Sensor
+    {
+        return $this->sensor;
+    }
+
+    /**
+     * @param \Sensor $sensor
+     */
+    public function setSensor(\Sensor $sensor): void
+    {
+        $this->sensor = $sensor;
+    }
 
 
 }

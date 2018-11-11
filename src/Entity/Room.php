@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="room")
  * @ORM\Entity
  */
-class Room
+class Room extends AbstractEntity
 {
     /**
      * @var int
@@ -28,5 +28,44 @@ class Room
      */
     private $parent = '0';
 
+    /**
+     * Room constructor.
+     * @param int|null $parent
+     */
+    public function __construct(?int $parent = 0)
+    {
+        $this->parent = $parent;
+    }
 
+    /**
+     * @return int
+     */
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getParent(): ?int
+    {
+        return $this->parent;
+    }
+
+    /**
+     * @param int $id
+     */
+    public function setId(int $id): void
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * @param int|null $parent
+     */
+    public function setParent(?int $parent): void
+    {
+        $this->parent = $parent;
+    }
 }

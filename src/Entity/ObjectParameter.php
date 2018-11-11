@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="object_parameter", uniqueConstraints={@ORM\UniqueConstraint(name="object_settings_parameter_uindex", columns={"name"})})
  * @ORM\Entity
  */
-class ObjectParameter
+class ObjectParameter extends AbstractEntity
 {
     /**
      * @var int
@@ -62,4 +62,35 @@ class ObjectParameter
         return $this->value;
     }
 
+    /**
+     * @return int
+     */
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param int $id
+     */
+    public function setId(int $id): void
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * @param string $name
+     */
+    public function setName(string $name): void
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * @param null|string $value
+     */
+    public function setValue(?string $value): void
+    {
+        $this->value = $value;
+    }
 }

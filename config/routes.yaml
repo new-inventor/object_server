@@ -1,3 +1,6 @@
-main_re:
+check_for_updates:
    path: /webApi/main/getUpdates
-   controller: App\Controller\WebApiController::getUpdates
+   controller: App\Controller\WebApiController::hasUpdates
+get_structure:
+   path: /webApi/objects/getDevices
+   controller: App\Controller\WebApiController::getDevices

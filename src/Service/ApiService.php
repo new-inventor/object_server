@@ -11,11 +11,13 @@ namespace App\Service;
 
 use App\Entity\Actuator;
 use App\Entity\ActuatorType;
+use App\Entity\Controller;
 use App\Entity\ElementType;
 use App\Entity\EventType;
 use App\Entity\ObjectParameter;
+use App\Entity\Sensor;
 use App\Entity\SensorType;
-use App\Entity\Trigger;
+use App\Entity\EventTrigger;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query;
 use GuzzleHttp\Client;
@@ -64,9 +66,9 @@ class ApiService
             ->setParameter('name', 'objectToken')
             ->getQuery()
             ->getResult();
-        if(\count($objectToken) > 0){
+        if (\count($objectToken) > 0) {
             $this->token = $objectToken[0]->getValue();
-        }else{
+        } else {
             $this->token = '';
         }
         $this->accountToken = $accountToken;
@@ -77,7 +79,7 @@ class ApiService
         ]);
     }
 
-    protected function makeApiRequest(
+    public function makeApiRequest(
         string $path,
         $mainParams,
         $useAccountToken
@@ -95,16 +97,15 @@ class ApiService
     public function getApiResponse(
         string $path,
         $mainParams,
-        $useAccountToken
-    )
-    {
+        $useAccountToken = false
+    ) {
         return $this->client->post(
             $this->uriPrefix . $path,
             ['form_params' => $this->initParameters($mainParams, $useAccountToken)]
         );
     }
 
-    public function initParameters($mainParams, bool $useAccountToken)
+    public function initParameters($mainParams, bool $useAccountToken = false)
     {
         $params = [
             'json' => json_encode($mainParams),
@@ -125,7 +126,6 @@ class ApiService
             'object_adress' => $address
         ], true);
         $content = json_decode($content, true);
-        var_dump($content);
         $objectId = $content['object']['object_id'];
         $objectToken = $content['object']['object_token'];
         if ($objectId === null || $objectId === false) {
@@ -161,52 +161,142 @@ class ApiService
         }
     }
 
-    public function syncStructure(int $objectId)
+    public function createOrUpdateField(string $entity, int $id, array $params)
     {
-        $content = $this->makeApiRequest('/objects/syncStructure', [
-            'object_id' => $objectId,
-        ], false);
-        $data = json_decode($content, true)['objectId'];
-        if ($data === null || $data === false) {
-            throw new Error('Server does not return a data. Or error occurred.');
+        $oldEntity = $this->em->find($entity, $id);
+        if ($oldEntity === null) {
+            $oldEntity = new $entity(...$params);
+        } else {
+            $oldEntity->load($params);
         }
-
-        foreach ($data['actuator_type'] as $actuatorTypeData) {
-            $actuatorType = new ActuatorType($actuatorTypeData['id'], $actuatorTypeData['title']);
-            $this->em->persist($actuatorType);
-        }
-        $this->em->flush();
-        $this->em->clear();
-        foreach ($data['event_type'] as $eventTypeData) {
-            $eventType = new EventType($eventTypeData['id']);
-            $this->em->persist($eventType);
-        }
-        $this->em->flush();
-        $this->em->clear();
-        foreach ($data['element_type'] as $elementTypeData) {
-            $elementType = new ElementType($elementTypeData['id'], $elementTypeData['title']);
-            $this->em->persist($elementType);
-        }
-        $this->em->flush();
-        $this->em->clear();
-        foreach ($data['sensor_type'] as $sensorTypeData) {
-            $sensorType = new SensorType($sensorTypeData['id'], $sensorTypeData['title']);
-            $this->em->persist($sensorType);
-        }
-        $this->em->flush();
-        $this->em->clear();
-        foreach ($data['trigger'] as $triggerData) {
-            $trigger = new Trigger($triggerData['id'], $triggerData['status'], $triggerData['content']);
-            $this->em->persist($trigger);
-        }
-        $this->em->flush();
-        $this->em->clear();
+        $this->em->persist($oldEntity);
+        return $oldEntity;
     }
+
+//    public function syncStructure(int $objectId)
+//    {
+//        $content = $this->makeApiRequest('/objects/syncStructure', [
+//            'object_id' => $objectId,
+//        ], false);
+//        $data = json_decode($content, true)['objectId'];
+//        if ($data === null || $data === false) {
+//            throw new Error('Server does not return a data. Or error occurred.');
+//        }
+//
+//        foreach ($data['actuator_type'] as $actuatorTypeData) {
+//            $actuatorType = new ActuatorType($actuatorTypeData['id'], $actuatorTypeData['title']);
+//            $this->em->persist($actuatorType);
+//        }
+//        $this->em->flush();
+//        $this->em->clear();
+//        foreach ($data['event_type'] as $eventTypeData) {
+//            $eventType = new EventType($eventTypeData['id']);
+//            $this->em->persist($eventType);
+//        }
+//        $this->em->flush();
+//        $this->em->clear();
+//        foreach ($data['element_type'] as $elementTypeData) {
+//            $elementType = new ElementType($elementTypeData['id'], $elementTypeData['title']);
+//            $this->em->persist($elementType);
+//        }
+//        $this->em->flush();
+//        $this->em->clear();
+//        foreach ($data['sensor_type'] as $sensorTypeData) {
+//            $sensorType = new SensorType($sensorTypeData['id'], $sensorTypeData['title']);
+//            $this->em->persist($sensorType);
+//        }
+//        $this->em->flush();
+//        $this->em->clear();
+//        foreach ($data['trigger'] as $triggerData) {
+//            $trigger = new EventTrigger($triggerData['id'], $triggerData['status'], $triggerData['content']);
+//            $this->em->persist($trigger);
+//        }
+//        $this->em->flush();
+//        $this->em->clear();
+//    }
 
     public function resetIpAddress(): bool
     {
         $response = $this->getApiResponse('/state/resetIp', [], true);
         return $response->getStatusCode() === 200;
+    }
+
+    public function getDevises()
+    {
+        $actuators = $this->em->createQueryBuilder()
+            ->select('a')
+            ->from(Actuator::class, 'a')
+            ->getQuery()
+            ->getResult();
+        $controllers = $this->em->createQueryBuilder()
+            ->select('c')
+            ->from(Controller::class, 'c')
+            ->getQuery()
+            ->getResult();
+        $sensors = $this->em->createQueryBuilder()
+            ->select('s')
+            ->from(Sensor::class, 's')
+            ->getQuery()
+            ->getResult();
+        $devices = [
+            'controller' => array_map(function (Controller $controller) {
+                return [
+                    'controller_id' => $controller->getId(),
+                    'room_id' => $controller->getRoom()->getId(),
+                ];
+            }, $controllers),
+            'sensor' => array_map(function (Sensor $sensor) {
+                return [
+                    'sensor_id' => $sensor->getId(),
+                    'sensor_type_id' => $sensor->getSensorType()->getId(),
+                    'controller_id' => $sensor->getController()->getId(),
+                ];
+            }, $sensors),
+            'actuator' => array_map(function (Actuator $actuator) {
+                return [
+                    'actuator_id' => $actuator->getId(),
+                    'actuator_type_id' => $actuator->getActuatorType()->getId(),
+                    'controller_id' => $actuator->getController()->getId(),
+                ];
+            }, $actuators),
+        ];
+        return $devices;
+//        $result = $this->makeApiRequest('/objects/syncDevices', $devices, false);
+//        var_dump($result);
+    }
+
+    public function syncTypes()
+    {
+        $content = $this->makeApiRequest('/objects/syncTypes', [], true);
+        $content = json_decode($content, true);
+        $this->createOrUpdateButch(SensorType::class, array_map(function ($item) {
+            $item['id'] = $item['sensor_type_id'];
+            unset($item['sensor_type_id']);
+            return $item;
+        }, $content['tables']['sensor_type']));
+        $this->createOrUpdateButch(ActuatorType::class, array_map(function ($item) {
+            $item['id'] = $item['actuator_type_id'];
+            unset($item['actuator_type_id']);
+            return $item;
+        }, $content['tables']['actuator_type']));
+        $this->createOrUpdateButch(EventType::class, array_map(function ($item) {
+            $item['id'] = $item['event_type_id'];
+            unset($item['event_type_id']);
+            return $item;
+        }, $content['tables']['event_type']));
+        $this->createOrUpdateButch(EventTrigger::class, array_map(function ($item) {
+            $item['id'] = $item['trigger_id'];
+            unset($item['trigger_id']);
+            return $item;
+        }, $content['tables']['trigger']));
+        $this->em->flush();
+    }
+
+    protected function createOrUpdateButch(string $entity, $list)
+    {
+        foreach ($list as $item) {
+            $this->createOrUpdateField($entity, (int)$item['id'], $item);
+        }
     }
 
 }

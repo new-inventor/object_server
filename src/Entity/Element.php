@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="element", indexes={@ORM\Index(name="FK_element_room", columns={"room_id"}), @ORM\Index(name="FK_element_element_type", columns={"element_type_id"})})
  * @ORM\Entity
  */
-class Element
+class Element extends AbstractEntity
 {
     /**
      * @var int
@@ -47,6 +47,70 @@ class Element
      * })
      */
     private $room;
+
+    /**
+     * @return int
+     */
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param int $id
+     */
+    public function setId(int $id): void
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * @return int
+     */
+    public function getParentElementId(): int
+    {
+        return $this->parentElementId;
+    }
+
+    /**
+     * @param int $parentElementId
+     */
+    public function setParentElementId(int $parentElementId): void
+    {
+        $this->parentElementId = $parentElementId;
+    }
+
+    /**
+     * @return \ElementType
+     */
+    public function getElementType(): \ElementType
+    {
+        return $this->elementType;
+    }
+
+    /**
+     * @param \ElementType $elementType
+     */
+    public function setElementType(\ElementType $elementType): void
+    {
+        $this->elementType = $elementType;
+    }
+
+    /**
+     * @return \Room
+     */
+    public function getRoom(): \Room
+    {
+        return $this->room;
+    }
+
+    /**
+     * @param \Room $room
+     */
+    public function setRoom(\Room $room): void
+    {
+        $this->room = $room;
+    }
 
 
 }

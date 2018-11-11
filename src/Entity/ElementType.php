@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="element_type")
  * @ORM\Entity
  */
-class ElementType
+class ElementType extends AbstractEntity
 {
     /**
      * @var int
@@ -36,6 +36,38 @@ class ElementType
     public function __construct(int $id, ?string $title)
     {
         $this->id = $id;
+        $this->title = $title;
+    }
+
+    /**
+     * @return int
+     */
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param int $id
+     */
+    public function setId(int $id): void
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getTitle(): ?string
+    {
+        return $this->title;
+    }
+
+    /**
+     * @param null|string $title
+     */
+    public function setTitle(?string $title): void
+    {
         $this->title = $title;
     }
 

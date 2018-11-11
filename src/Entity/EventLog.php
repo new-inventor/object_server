@@ -41,7 +41,7 @@ class EventLog
     /**
      * @var \Trigger
      *
-     * @ORM\ManyToOne(targetEntity="Trigger")
+     * @ORM\ManyToOne(targetEntity="EventTrigger")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="trigger_id", referencedColumnName="id")
      * })
@@ -57,6 +57,86 @@ class EventLog
      * })
      */
     private $eventType;
+
+    /**
+     * @return int
+     */
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param int $id
+     */
+    public function setId(int $id): void
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getCreated(): ?int
+    {
+        return $this->created;
+    }
+
+    /**
+     * @param int|null $created
+     */
+    public function setCreated(?int $created): void
+    {
+        $this->created = $created;
+    }
+
+    /**
+     * @return \Element
+     */
+    public function getElement(): \Element
+    {
+        return $this->element;
+    }
+
+    /**
+     * @param \Element $element
+     */
+    public function setElement(\Element $element): void
+    {
+        $this->element = $element;
+    }
+
+    /**
+     * @return \Trigger
+     */
+    public function getTrigger(): \Trigger
+    {
+        return $this->trigger;
+    }
+
+    /**
+     * @param \Trigger $trigger
+     */
+    public function setTrigger(\Trigger $trigger): void
+    {
+        $this->trigger = $trigger;
+    }
+
+    /**
+     * @return \EventType
+     */
+    public function getEventType(): \EventType
+    {
+        return $this->eventType;
+    }
+
+    /**
+     * @param \EventType $eventType
+     */
+    public function setEventType(\EventType $eventType): void
+    {
+        $this->eventType = $eventType;
+    }
 
 
 }

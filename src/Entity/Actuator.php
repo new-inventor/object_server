@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="actuator", indexes={@ORM\Index(name="FK_actuator_actuator_type", columns={"actuator_type_id"}), @ORM\Index(name="FK_actuator_controller", columns={"controller_id"})})
  * @ORM\Entity
  */
-class Actuator
+class Actuator extends AbstractEntity
 {
 
     /**
@@ -50,6 +50,54 @@ class Actuator
     public function __construct(ActuatorType $actuatorType, Controller $controller)
     {
         $this->actuatorType = $actuatorType;
+        $this->controller = $controller;
+    }
+
+    /**
+     * @return int
+     */
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param int $id
+     */
+    public function setId(int $id): void
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * @return ActuatorType
+     */
+    public function getActuatorType(): ActuatorType
+    {
+        return $this->actuatorType;
+    }
+
+    /**
+     * @param ActuatorType $actuatorType
+     */
+    public function setActuatorType(ActuatorType $actuatorType): void
+    {
+        $this->actuatorType = $actuatorType;
+    }
+
+    /**
+     * @return Controller
+     */
+    public function getController(): Controller
+    {
+        return $this->controller;
+    }
+
+    /**
+     * @param Controller $controller
+     */
+    public function setController(Controller $controller): void
+    {
         $this->controller = $controller;
     }
 }

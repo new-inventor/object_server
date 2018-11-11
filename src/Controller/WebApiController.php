@@ -10,10 +10,13 @@ namespace App\Controller;
 
 
 use App\Entity\ObjectParameter;
+use App\Service\ApiService;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\ResultSetMapping;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Log\Logger;
 
 class WebApiController
 {
@@ -21,15 +24,20 @@ class WebApiController
      * @var EntityManagerInterface
      */
     private $em;
+    /**
+     * @var Logger
+     */
+    private $logger;
 
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(EntityManagerInterface $em, LoggerInterface $logger)
     {
         $this->em = $em;
+        $this->logger = $logger;
     }
 
-    public function getUpdates(Request $request)
+    public function hasUpdates(Request $request)
     {
-        var_dump($request->getContent());
+        $this->logger->log('600', 'Has updates called.', ['GET' => $request, 'POST' => $request->getContent()]);
         /** @var ObjectParameter[] $parameter */
         $parameter = $this->em->createQueryBuilder()
             ->select('op')
@@ -39,18 +47,29 @@ class WebApiController
             ->getQuery()
             ->getResult();
         if (\count($parameter) > 0) {
-            $var = '12123123123';
+            $requestBody = json_decode($request->getContent());
             $rsm = new ResultSetMapping();
             $rsm->addScalarResult('result', 'result');
             $query = $this->em->createNativeQuery('SELECT match_object_hash(?) as result;', $rsm);
-            $query->setParameter(1, $var);
+            $query->setParameter(1, $requestBody['object_hash']);
             $res = (int)$query->getResult()[0]['result'];
-            var_dump($res);
             if($res === 0){
+                exec(__DIR__. '/../../bin/console app:send-devices');
                 return new JsonResponse(['json' => ['updates' => 'has updates', 'object_id' => $parameter[0]->getValue()]], 200);
+
             }
             return new JsonResponse(['json' => ['updates' => 'no updates', 'object_id' => $parameter[0]->getValue()]], 200);
         }
         return new JsonResponse(['result' => 'error', 'message' => 'Object did not initialised.'], 200);
+    }
+
+    public function getDevices(ApiService $apiService)
+    {
+        return new JsonResponse(['json' => $apiService->getDevises()]);
+    }
+
+    public function getActuatorLog()
+    {
+        return new JsonResponse(['json' => []]);
     }
 }

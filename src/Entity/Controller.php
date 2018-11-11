@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="controller", indexes={@ORM\Index(name="FK_controller_room", columns={"room_id"})})
  * @ORM\Entity
  */
-class Controller
+class Controller extends AbstractEntity
 {
     /**
      * @var int
@@ -22,7 +22,7 @@ class Controller
     private $id;
 
     /**
-     * @var \Room
+     * @var Room
      *
      * @ORM\ManyToOne(targetEntity="Room")
      * @ORM\JoinColumns({
@@ -31,5 +31,44 @@ class Controller
      */
     private $room;
 
+    /**
+     * Controller constructor.
+     * @param Room $room
+     */
+    public function __construct(Room $room)
+    {
+        $this->room = $room;
+    }
 
+    /**
+     * @return int
+     */
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return Room
+     */
+    public function getRoom(): Room
+    {
+        return $this->room;
+    }
+
+    /**
+     * @param int $id
+     */
+    public function setId(int $id): void
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * @param Room $room
+     */
+    public function setRoom(Room $room): void
+    {
+        $this->room = $room;
+    }
 }
