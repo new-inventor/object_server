@@ -10,12 +10,12 @@ use Doctrine\Migrations\AbstractMigration;
  */
 final class Version20181110141559 extends AbstractMigration
 {
-    public function up(Schema $schema) : void
+    public function up(Schema $schema): void
     {
         $schema->getTable('sensor')->addColumn('controller_id', 'integer');
     }
 
-    public function down(Schema $schema) : void
+    public function down(Schema $schema): void
     {
         $schema->getTable('sensor')->dropColumn('controller_id');
         // this down() migration is auto-generated, please modify it to your needs

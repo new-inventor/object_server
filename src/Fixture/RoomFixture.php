@@ -1,10 +1,5 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: george
- * Date: 11.11.18
- * Time: 12:51
- */
+
 
 namespace App\Fixture;
 

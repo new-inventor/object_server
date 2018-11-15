@@ -1,10 +1,5 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: george
- * Date: 09.11.18
- * Time: 21:16
- */
+
 
 namespace App\Service;
 
@@ -32,7 +27,8 @@ class AppService
         var_dump($this->config);
     }
 
-    public function getConfigParameter(string $path) {
+    public function getConfigParameter(string $path)
+    {
         return $this->propertyAccessor->getValue($this->config, $path);
     }
 }

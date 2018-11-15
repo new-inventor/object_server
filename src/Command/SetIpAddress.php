@@ -1,15 +1,12 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: george
- * Date: 10.11.18
- * Time: 17:01
- */
+
 
 namespace App\Command;
 
 
-use App\Service\ApiService;
+use App\Api\WebServer\Request\ResetIpRequest;
+use App\Api\WebServer\Response\ResetIpResponse;
+use App\Service\WebServerApiService;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -17,14 +14,14 @@ use Symfony\Component\Console\Output\OutputInterface;
 class SetIpAddress extends Command
 {
     /**
-     * @var ApiService
+     * @var WebServerApiService
      */
-    private $apiServise;
+    private $apiService;
 
-    public function __construct(?string $name = null, ApiService $apiService)
+    public function __construct(?string $name = null, WebServerApiService $apiService)
     {
         parent::__construct($name);
-        $this->apiServise = $apiService;
+        $this->apiService = $apiService;
     }
 
     protected function configure()
@@ -36,7 +33,8 @@ class SetIpAddress extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        if ($this->apiServise->resetIpAddress()) {
+        $request = new ResetIpRequest();
+        if ((new ResetIpResponse($this->apiService->getApiResponse($request)))->isSuccess()) {
             $output->writeln('Ip reset success.');
         } else {
             $output->writeln('Ip reset failed.');

@@ -10,13 +10,13 @@ use Doctrine\Migrations\AbstractMigration;
  */
 final class Version20181111114212 extends AbstractMigration
 {
-    public function up(Schema $schema) : void
+    public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
         $schema->renameTable('trigger', 'event_trigger');
     }
 
-    public function down(Schema $schema) : void
+    public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
         $schema->renameTable('event_trigger', 'trigger');

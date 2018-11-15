@@ -49,19 +49,19 @@ class Controller extends AbstractEntity
     }
 
     /**
-     * @return Room
-     */
-    public function getRoom(): Room
-    {
-        return $this->room;
-    }
-
-    /**
      * @param int $id
      */
     public function setId(int $id): void
     {
         $this->id = $id;
+    }
+
+    /**
+     * @return Room
+     */
+    public function getRoom(): Room
+    {
+        return $this->room;
     }
 
     /**

@@ -1,10 +1,5 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: george
- * Date: 11.11.18
- * Time: 12:47
- */
+
 
 namespace App\Fixture;
 
@@ -27,7 +22,8 @@ class ControllerFixture extends Fixture
         $manager->flush();
     }
 
-    public function getDependencies(): array {
+    public function getDependencies(): array
+    {
         return [
             RoomFixture::class,
         ];

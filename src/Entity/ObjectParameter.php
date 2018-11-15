@@ -13,6 +13,12 @@ use Doctrine\ORM\Mapping as ORM;
 class ObjectParameter extends AbstractEntity
 {
     /**
+     * @var string|null
+     *
+     * @ORM\Column(name="value", type="string", length=255, nullable=true)
+     */
+    public $value;
+    /**
      * @var int
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
@@ -20,20 +26,12 @@ class ObjectParameter extends AbstractEntity
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
-
     /**
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=100, nullable=false)
      */
     private $name;
-
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="value", type="string", length=255, nullable=true)
-     */
-    public $value;
 
     /**
      * ObjectParameter constructor.
@@ -55,11 +53,27 @@ class ObjectParameter extends AbstractEntity
     }
 
     /**
+     * @param string $name
+     */
+    public function setName(string $name): void
+    {
+        $this->name = $name;
+    }
+
+    /**
      * @return null|string
      */
     public function getValue(): ?string
     {
         return $this->value;
+    }
+
+    /**
+     * @param null|string $value
+     */
+    public function setValue(?string $value): void
+    {
+        $this->value = $value;
     }
 
     /**
@@ -76,21 +90,5 @@ class ObjectParameter extends AbstractEntity
     public function setId(int $id): void
     {
         $this->id = $id;
-    }
-
-    /**
-     * @param string $name
-     */
-    public function setName(string $name): void
-    {
-        $this->name = $name;
-    }
-
-    /**
-     * @param null|string $value
-     */
-    public function setValue(?string $value): void
-    {
-        $this->value = $value;
     }
 }

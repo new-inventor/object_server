@@ -1,30 +1,44 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: george
- * Date: 11.11.18
- * Time: 17:06
- */
+
 
 namespace App\Command;
 
 
-use App\Service\ApiService;
+use App\Api\WebServer\Request\SendDevicesRequest;
+use App\Api\WebServer\Response\SendDevicesResponse;
+use App\Service\WebServerApiService;
+use App\Service\DevisesService;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class SendDevices extends Command
 {
+
     /**
-     * @var ApiService
+     * @var EntityManagerInterface
+     */
+    private $em;
+    /**
+     * @var WebServerApiService
      */
     private $apiService;
+    /**
+     * @var DevisesService
+     */
+    private $devisesService;
 
-    public function __construct(?string $name = null, ApiService $apiService)
-    {
+    public function __construct(
+        ?string $name = null,
+        EntityManagerInterface $em,
+        WebServerApiService $apiService,
+        DevisesService $devisesService
+    ) {
         parent::__construct($name);
+        $this->em = $em;
         $this->apiService = $apiService;
+        $this->devisesService = $devisesService;
     }
 
     protected function configure()
@@ -36,8 +50,12 @@ class SendDevices extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $devices = $this->apiService->getDevises();
-        $result = $this->apiService->makeApiRequest('/objects/syncDevices', $devices, false);
-        $output->writeln('Synchronisation complete');
+        $request = new SendDevicesRequest(...$this->devisesService->all());
+        $response = new SendDevicesResponse($this->apiService->getApiResponse($request));
+        if ($response->isSuccess()) {
+            $output->writeln('Synchronisation complete');
+        } else {
+            $output->writeln('Synchronisation failed');
+        }
     }
 }

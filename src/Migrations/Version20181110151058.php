@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
  */
 final class Version20181110151058 extends AbstractMigration
 {
-    public function up(Schema $schema) : void
+    public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->addSql('CREATE FUNCTION match_object_hash(webServerObjectHash VARCHAR(255))
@@ -27,7 +27,7 @@ final class Version20181110151058 extends AbstractMigration
   END;');
     }
 
-    public function down(Schema $schema) : void
+    public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
         $this->addSql('drop function match_object_hash(webServerObjectHash VARCHAR(255));');

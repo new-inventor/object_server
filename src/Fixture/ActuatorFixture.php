@@ -1,10 +1,5 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: george
- * Date: 11.11.18
- * Time: 12:35
- */
+
 
 namespace App\Fixture;
 
@@ -38,7 +33,8 @@ class ActuatorFixture extends Fixture
         $manager->clear();
     }
 
-    public function getDependencies(): array {
+    public function getDependencies(): array
+    {
         return [
             ControllerFixture::class,
         ];

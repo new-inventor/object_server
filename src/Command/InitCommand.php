@@ -1,26 +1,15 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: george
- * Date: 07.11.18
- * Time: 2:24
- */
+
 
 namespace App\Command;
 
 
-use App\Entity\ObjectParameter;
-use App\Service\ApiService;
-use App\Service\AppService;
+use App\Service\WebServerApiService;
 use Doctrine\ORM\EntityManagerInterface;
-use GuzzleHttp\Client;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Dotenv\Dotenv;
-use Symfony\Component\Yaml\Yaml;
 
 class InitCommand extends Command
 {
@@ -29,11 +18,11 @@ class InitCommand extends Command
      */
     private $em;
     /**
-     * @var ApiService
+     * @var WebServerApiService
      */
     private $apiServise;
 
-    public function __construct(?string $name = null, EntityManagerInterface $em, ApiService $apiServise)
+    public function __construct(?string $name = null, EntityManagerInterface $em, WebServerApiService $apiServise)
     {
         parent::__construct($name);
         $this->em = $em;
@@ -51,11 +40,10 @@ class InitCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $objectId = $this->apiServise->initObject(
+        $this->apiServise->initObject(
             $input->getArgument('objectTitle'),
             $input->getArgument('objectAddress')
         );
-//        $this->apiServise->syncStructure($objectId);
         $this->apiServise->syncTypes();
     }
 }

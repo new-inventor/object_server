@@ -46,19 +46,19 @@ class Room extends AbstractEntity
     }
 
     /**
-     * @return int|null
-     */
-    public function getParent(): ?int
-    {
-        return $this->parent;
-    }
-
-    /**
      * @param int $id
      */
     public function setId(int $id): void
     {
         $this->id = $id;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getParent(): ?int
+    {
+        return $this->parent;
     }
 
     /**

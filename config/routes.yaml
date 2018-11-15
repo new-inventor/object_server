@@ -1,6 +1,19 @@
 check_for_updates:
-   path: /webApi/main/getUpdates
+   path: /webApi/structure/updates/check
    controller: App\Controller\WebApiController::hasUpdates
-get_structure:
-   path: /webApi/objects/getDevices
-   controller: App\Controller\WebApiController::getDevices
+device_action:
+   path: /webApi/device/{action}
+   requirements:
+      action: 'list|link|unlink'
+   controller: App\Controller\WebApiController::deviceAction
+get_status:
+   path: /webApi/status/{peripheralType}
+   requirements:
+      peripheralType: 'sensor|actuator|controller|element|room'
+   controller: App\Controller\WebApiController::getStatus
+sync_log:
+   path: /webApi/log/{peripheralType}/{logType}
+   requirements:
+      peripheralType: 'sensor|actuator|controller|element|room'
+      logType: 'int|bit|auto'
+   controller: App\Controller\WebApiController::syncLog

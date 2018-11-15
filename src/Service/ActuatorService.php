@@ -1,10 +1,5 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: george
- * Date: 07.11.18
- * Time: 1:48
- */
+
 
 namespace App\Service;
 
