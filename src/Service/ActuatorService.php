@@ -41,26 +41,6 @@ class ActuatorService
     }
 
     /**
-     * @param int $id
-     * @param string $type ('int' | 'bit')
-     * @param \DateTime $start
-     * @param \DateTime $end
-     * @return Actuator[]
-     * @throws \Exception
-     */
-    public function getLog(int $id, string $type, \DateTime $start, \DateTime $end)
-    {
-        $actuator = $this->em->find(Actuator::class, $id);
-        if ($type === 'int') {
-            return $this->getIntLog($actuator, $start, $end);
-        }
-        if ($type === 'bit') {
-            return $this->getBitLog($actuator, $start, $end);
-        }
-        return [];
-    }
-
-    /**
      * @param int $actuator
      * @param string $type
      * @param \DateTime|null $start
@@ -68,7 +48,7 @@ class ActuatorService
      * @return mixed
      * @throws \Exception
      */
-    private function getIntLog(Actuator $actuator, \DateTime $start = null, \DateTime $end = null)
+    public function getIntLog(Actuator $actuator, \DateTime $start = null, \DateTime $end = null)
     {
         if ($start === null) {
             $start = new \DateTime();
@@ -97,7 +77,7 @@ class ActuatorService
      * @param \DateTime|null $end
      * @return mixed
      */
-    private function getBitLog(Actuator $actuator, \DateTime $start = null, \DateTime $end = null)
+    public function getBitLog(Actuator $actuator, \DateTime $start = null, \DateTime $end = null)
     {
         if ($start === null) {
             $start = new \DateTime();
@@ -114,6 +94,21 @@ class ActuatorService
             ->setParameter('start', $start->format('U'))
             ->setParameter('end', $end->format('U'))
             ->setParameter('actuator', $actuator)
+            ->getQuery()
+            ->getResult(AbstractQuery::HYDRATE_ARRAY);
+        var_dump($res);
+        return $res;
+    }
+
+    public function getLastIntLog(Actuator $actuator)
+    {
+        $res = $this->em->createQueryBuilder()
+            ->select('i')
+            ->andWhere('i.actuator = :actuator')
+            ->setParameter('actuator', $actuator)
+            ->orderBy('i.id', 'desc')
+            ->setFirstResult(0)
+            ->setMaxResults(1)
             ->getQuery()
             ->getResult(AbstractQuery::HYDRATE_ARRAY);
         var_dump($res);

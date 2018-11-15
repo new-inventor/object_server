@@ -7,6 +7,7 @@ namespace App\Controller;
 use App\Api\Error\ApiError;
 use App\Entity\ObjectParameter;
 use App\Service\DevisesService;
+use App\Service\ElementsService;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\ResultSetMapping;
 use Psr\Log\LoggerInterface;
@@ -108,6 +109,68 @@ class WebApiController extends AbstractController
                 throw new ApiError("Invalid peripheral type '$peripheralType'.");
             },
             $peripheralType
+        );
+    }
+
+    public function getElementCurrentData(Request $request, ElementsService $elementsService)
+    {
+        return $this->tryToHandle(
+            function (Request $request, ElementsService $elementsService) {
+                $parsedParams = $this->parseJson($request->request->get('json'));
+                return $this->getResponse($elementsService->getElementCurrentData($parsedParams['element_id']));
+            },
+            $request,
+            $elementsService
+        );
+    }
+
+    public function getSensorCurrentData(Request $request, ElementsService $elementsService)
+    {
+        return $this->tryToHandle(
+            function (Request $request, ElementsService $elementsService) {
+                $parsedParams = $this->parseJson($request->request->get('json'));
+                if ($parsedParams['item'] === 'sensor') {
+                    return $this->getResponse($elementsService->getSensorCurrentData($parsedParams['item_id']));
+                } elseif ($parsedParams['item'] === 'actuator') {
+                    return $this->getResponse([]);
+                }
+                throw new ApiError('Invalid item.');
+            },
+            $request,
+            $elementsService
+        );
+    }
+
+    public function getRoomCurrentData(Request $request, ElementsService $elementsService)
+    {
+        return $this->tryToHandle(
+            function (Request $request, ElementsService $elementsService) {
+                $parsedParams = $this->parseJson($request->request->get('json'));
+                return $this->getResponse($elementsService->getRoomCurrentData($parsedParams['room_id']));
+            },
+            $request,
+            $elementsService
+        );
+    }
+
+    public function getElementLog(Request $request, ElementsService $elementsService)
+    {
+        return $this->tryToHandle(
+            function (Request $request, ElementsService $elementsService) {
+                $parsedParams = $this->parseJsonBody($request);
+                $from = $parsedParams['from'] ?? null;
+                if ($from === null) {
+                    $from = (new \DateTime())->sub(new \DateInterval('PT30M'));
+                }
+                $to = $parsedParams['to'] ?? null;
+                if ($to === null) {
+                    $to = new \DateTime();
+                }
+                var_dump($elementsService->getElementLog($parsedParams['element_id'], $from, $to));
+                return $this->getResponse([]);
+            },
+            $request,
+            $elementsService
         );
     }
 

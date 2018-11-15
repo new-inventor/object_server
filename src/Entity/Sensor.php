@@ -42,6 +42,20 @@ class Sensor extends AbstractEntity
     private $controller;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="description", type="string", nullable=true)
+     */
+    private $description;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="log_type", type="string", nullable=true)
+     */
+    private $logType;
+
+    /**
      * Sensor constructor.
      * @param SensorType $sensorType
      * @param Controller $controller
@@ -100,5 +114,35 @@ class Sensor extends AbstractEntity
         $this->controller = $controller;
     }
 
+    /**
+     * @return string
+     */
+    public function getDescription(): string
+    {
+        return $this->description;
+    }
 
+    /**
+     * @param string $description
+     */
+    public function setDescription(string $description): void
+    {
+        $this->description = $description;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLogType(): string
+    {
+        return $this->logType;
+    }
+
+    /**
+     * @param string $logType
+     */
+    public function setLogType(string $logType): void
+    {
+        $this->logType = $logType;
+    }
 }

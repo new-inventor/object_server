@@ -2,7 +2,7 @@ main:
    path: /
    controller: App\Controller\MainController::main
 check_for_updates:
-   path: /webApi/structure/updates/check
+  path: /webApi/structure/updatesCheck
    controller: App\Controller\WebApiController::hasUpdates
 update_structure:
    path: /webApi/structure/update
@@ -17,6 +17,22 @@ get_status:
    requirements:
       peripheralType: 'sensor|actuator|controller|element|room'
    controller: App\Controller\WebApiController::getStatus
+element_log:
+  path: /webApi/element/log
+  controller: App\Controller\WebApiController::getElementLog
+  methods: [POST, OPTIONS]
+sensor_current_data:
+  path: /webApi/sensor/current_data
+  controller: App\Controller\WebApiController::getSensorCurrentData
+  methods: [POST, OPTIONS]
+element_current_data:
+  path: /webApi/element/current_data
+  controller: App\Controller\WebApiController::getElementCurrentData
+  methods: [POST, OPTIONS]
+room_current_data:
+  path: /webApi/room/current_data
+  controller: App\Controller\WebApiController::getRoomCurrentData
+  methods: [POST, OPTIONS]
 sync_log:
    path: /webApi/log/{peripheralType}/{logType}
    requirements:
