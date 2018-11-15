@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "800dfd11e5a9a75d0d7682ab7afb38bf",
-    "content-hash": "36d91529d7f76a5c1ce575fddd554ac7",
+  "hash": "18ae60cec1ede4f612a1815ca1d5745e",
+  "content-hash": "0d22fb1c9c86e2e557de7d0dcde786c5",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -3193,52 +3193,6 @@
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
             "time": "2018-10-02 16:36:10"
-        },
-        {
-            "name": "workerman/workerman",
-            "version": "v3.5.15",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/walkor/Workerman.git",
-                "reference": "6df60271e514201a17a96acb8ea16936000444cb"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/walkor/Workerman/zipball/6df60271e514201a17a96acb8ea16936000444cb",
-                "reference": "6df60271e514201a17a96acb8ea16936000444cb",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3"
-            },
-            "suggest": {
-                "ext-event": "For better performance. "
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Workerman\\": "./"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "walkor",
-                    "email": "walkor@workerman.net",
-                    "homepage": "http://www.workerman.net",
-                    "role": "Developer"
-                }
-            ],
-            "description": "An asynchronous event driven PHP framework for easily building fast, scalable network applications.",
-            "homepage": "http://www.workerman.net",
-            "keywords": [
-                "asynchronous",
-                "event-loop"
-            ],
-            "time": "2018-09-20 09:11:43"
         },
         {
             "name": "zendframework/zend-code",

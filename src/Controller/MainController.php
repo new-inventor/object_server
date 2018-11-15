@@ -23,14 +23,8 @@ class MainController
         $this->em = $em;
     }
 
-    public function getValue()
+    public function main()
     {
-        $controller = $this->em->find('App\\Entity\\Controller', 1);
-        $type = $this->em->find('App\\Entity\\ActuatorType', 1);
-        $element = $this->em->find('App\\Entity\\Element', 1);
-        if ($controller && $type && $element) {
-            $this->actuatorService->addActuator($type, $controller, $element);
-        }
-        return new JsonResponse(['asdasd' => 'some ansver']);
+        return new JsonResponse(null);
     }
 }

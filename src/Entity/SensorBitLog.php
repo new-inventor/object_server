@@ -36,7 +36,7 @@ class SensorBitLog extends AbstractEntity
     private $created = '0';
 
     /**
-     * @var \Sensor
+     * @var Sensor
      *
      * @ORM\ManyToOne(targetEntity="Sensor")
      * @ORM\JoinColumns({
@@ -94,17 +94,17 @@ class SensorBitLog extends AbstractEntity
     }
 
     /**
-     * @return \Sensor
+     * @return Sensor
      */
-    public function getSensor(): \Sensor
+    public function getSensor(): Sensor
     {
         return $this->sensor;
     }
 
     /**
-     * @param \Sensor $sensor
+     * @param Sensor $sensor
      */
-    public function setSensor(\Sensor $sensor): void
+    public function setSensor(Sensor $sensor): void
     {
         $this->sensor = $sensor;
     }

@@ -4,6 +4,8 @@
 namespace App\Controller;
 
 
+use Symfony\Component\HttpFoundation\JsonResponse;
+
 class AbstractController
 {
     public function tryToHandle($handler, ...$parameters)

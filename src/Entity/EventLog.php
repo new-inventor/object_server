@@ -29,7 +29,7 @@ class EventLog
     private $created;
 
     /**
-     * @var \Element
+     * @var Element
      *
      * @ORM\ManyToOne(targetEntity="Element")
      * @ORM\JoinColumns({
@@ -39,7 +39,7 @@ class EventLog
     private $element;
 
     /**
-     * @var \Trigger
+     * @var EventTrigger
      *
      * @ORM\ManyToOne(targetEntity="EventTrigger")
      * @ORM\JoinColumns({
@@ -49,7 +49,7 @@ class EventLog
     private $trigger;
 
     /**
-     * @var \EventType
+     * @var EventType
      *
      * @ORM\ManyToOne(targetEntity="EventType")
      * @ORM\JoinColumns({
@@ -91,49 +91,49 @@ class EventLog
     }
 
     /**
-     * @return \Element
+     * @return Element
      */
-    public function getElement(): \Element
+    public function getElement(): Element
     {
         return $this->element;
     }
 
     /**
-     * @param \Element $element
+     * @param Element $element
      */
-    public function setElement(\Element $element): void
+    public function setElement(Element $element): void
     {
         $this->element = $element;
     }
 
     /**
-     * @return \Trigger
+     * @return EventTrigger
      */
-    public function getTrigger(): \Trigger
+    public function getTrigger(): EventTrigger
     {
         return $this->trigger;
     }
 
     /**
-     * @param \Trigger $trigger
+     * @param EventTrigger $trigger
      */
-    public function setTrigger(\Trigger $trigger): void
+    public function setTrigger(EventTrigger $trigger): void
     {
         $this->trigger = $trigger;
     }
 
     /**
-     * @return \EventType
+     * @return EventType
      */
-    public function getEventType(): \EventType
+    public function getEventType(): EventType
     {
         return $this->eventType;
     }
 
     /**
-     * @param \EventType $eventType
+     * @param EventType $eventType
      */
-    public function setEventType(\EventType $eventType): void
+    public function setEventType(EventType $eventType): void
     {
         $this->eventType = $eventType;
     }

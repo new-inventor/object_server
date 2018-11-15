@@ -22,7 +22,7 @@ class ElementSensor extends AbstractEntity
     private $id;
 
     /**
-     * @var \Element
+     * @var Element
      *
      * @ORM\ManyToOne(targetEntity="Element")
      * @ORM\JoinColumns({
@@ -32,7 +32,7 @@ class ElementSensor extends AbstractEntity
     private $element;
 
     /**
-     * @var \Sensor
+     * @var Sensor
      *
      * @ORM\ManyToOne(targetEntity="Sensor")
      * @ORM\JoinColumns({
@@ -58,33 +58,33 @@ class ElementSensor extends AbstractEntity
     }
 
     /**
-     * @return \Element
+     * @return Element
      */
-    public function getElement(): \Element
+    public function getElement(): Element
     {
         return $this->element;
     }
 
     /**
-     * @param \Element $element
+     * @param Element $element
      */
-    public function setElement(\Element $element): void
+    public function setElement(Element $element): void
     {
         $this->element = $element;
     }
 
     /**
-     * @return \Sensor
+     * @return Sensor
      */
-    public function getSensor(): \Sensor
+    public function getSensor(): Sensor
     {
         return $this->sensor;
     }
 
     /**
-     * @param \Sensor $sensor
+     * @param Sensor $sensor
      */
-    public function setSensor(\Sensor $sensor): void
+    public function setSensor(Sensor $sensor): void
     {
         $this->sensor = $sensor;
     }

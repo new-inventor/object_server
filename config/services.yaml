@@ -26,7 +26,7 @@ services:
         resource: '../src/Controller'
         tags: ['controller.service_arguments']
 
-    App\Service\ApiService:
+    App\Service\WebServerApiService:
         arguments:
             $domain: '%env(string:WEB_SERVER_DOMAIN)%'
             $uriPrefix: '%env(string:WEB_SERVER_URI_PREFIX)%'

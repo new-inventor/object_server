@@ -1,6 +1,12 @@
+main:
+   path: /
+   controller: App\Controller\MainController::main
 check_for_updates:
    path: /webApi/structure/updates/check
    controller: App\Controller\WebApiController::hasUpdates
+update_structure:
+   path: /webApi/structure/update
+   controller: App\Controller\WebApiController::updateStructure
 device_action:
    path: /webApi/device/{action}
    requirements:

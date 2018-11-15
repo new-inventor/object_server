@@ -6,8 +6,8 @@ namespace App\Command;
 
 use App\Api\WebServer\Request\SendDevicesRequest;
 use App\Api\WebServer\Response\SendDevicesResponse;
-use App\Service\WebServerApiService;
 use App\Service\DevisesService;
+use App\Service\WebServerApiService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;

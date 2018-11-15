@@ -29,7 +29,7 @@ class Element extends AbstractEntity
     private $parentElementId = '0';
 
     /**
-     * @var \ElementType
+     * @var ElementType
      *
      * @ORM\ManyToOne(targetEntity="ElementType")
      * @ORM\JoinColumns({
@@ -39,7 +39,7 @@ class Element extends AbstractEntity
     private $elementType;
 
     /**
-     * @var \Room
+     * @var Room
      *
      * @ORM\ManyToOne(targetEntity="Room")
      * @ORM\JoinColumns({
@@ -47,6 +47,21 @@ class Element extends AbstractEntity
      * })
      */
     private $room;
+
+    /**
+     * Element constructor.
+     * @param int $id
+     * @param int $parentElementId
+     * @param ElementType $elementType
+     * @param Room $room
+     */
+    public function __construct(int $id, ElementType $elementType, Room $room, int $parentElementId)
+    {
+        $this->id = $id;
+        $this->parentElementId = $parentElementId;
+        $this->elementType = $elementType;
+        $this->room = $room;
+    }
 
     /**
      * @return int
@@ -81,33 +96,33 @@ class Element extends AbstractEntity
     }
 
     /**
-     * @return \ElementType
+     * @return ElementType
      */
-    public function getElementType(): \ElementType
+    public function getElementType(): ElementType
     {
         return $this->elementType;
     }
 
     /**
-     * @param \ElementType $elementType
+     * @param ElementType $elementType
      */
-    public function setElementType(\ElementType $elementType): void
+    public function setElementType(ElementType $elementType): void
     {
         $this->elementType = $elementType;
     }
 
     /**
-     * @return \Room
+     * @return Room
      */
-    public function getRoom(): \Room
+    public function getRoom(): Room
     {
         return $this->room;
     }
 
     /**
-     * @param \Room $room
+     * @param Room $room
      */
-    public function setRoom(\Room $room): void
+    public function setRoom(Room $room): void
     {
         $this->room = $room;
     }

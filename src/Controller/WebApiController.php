@@ -7,7 +7,6 @@ namespace App\Controller;
 use App\Api\Error\ApiError;
 use App\Entity\ObjectParameter;
 use App\Service\DevisesService;
-use App\Service\WebServerApiService;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\ResultSetMapping;
 use Psr\Log\LoggerInterface;
@@ -35,7 +34,7 @@ class WebApiController extends AbstractController
     {
         $this->logger->log('600', 'Has updates called.', ['GET' => $request, 'POST' => $request->getContent()]);
         return $this->tryToHandle(
-            function (EntityManagerInterface $em, Request $request) {
+            function (Request $request) {
                 /** @var ObjectParameter[] $parameter */
                 $parameter = $this->em->createQueryBuilder()
                     ->select('op')
@@ -62,16 +61,15 @@ class WebApiController extends AbstractController
                 }
                 return $this->getResponse($response);
             },
-            $this->em,
             $request
         );
     }
 
 
-    public function deviceAction(string $action, WebServerApiService $apiService, DevisesService $devisesService)
+    public function deviceAction(string $action, DevisesService $devisesService)
     {
         return $this->tryToHandle(
-            function (string $action, WebServerApiService $apiService, DevisesService $devisesService) {
+            function (string $action, DevisesService $devisesService) {
                 if ($action === 'link') {
 
                 } elseif ($action === 'unlink') {
@@ -82,7 +80,6 @@ class WebApiController extends AbstractController
                 throw new ApiError("Unknown devise actoin '$action'");
             },
             $action,
-            $apiService,
             $devisesService
         );
     }
@@ -92,7 +89,11 @@ class WebApiController extends AbstractController
         return $this->tryToHandle(
             function (string $peripheralType) {
                 if ($peripheralType === 'sensor') {
-
+                    return $this->getResponse([
+                        'elements' => [
+                            ''
+                        ]
+                    ]);
                 } elseif ($peripheralType === 'actuator') {
 
                 } elseif ($peripheralType === 'controller') {
@@ -141,6 +142,17 @@ class WebApiController extends AbstractController
             },
             $peripheralType,
             $logType
+        );
+    }
+
+    public function updateStructure(Request $request)
+    {
+        return $this->tryToHandle(
+            function (Request $request) {
+                $content = json_decode($request->getContent());
+                return $this->getResponse([]);
+            },
+            $request
         );
     }
 }

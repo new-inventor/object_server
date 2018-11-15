@@ -36,7 +36,7 @@ class ActuatorIntLog extends AbstractEntity
     private $created = '0';
 
     /**
-     * @var \Actuator
+     * @var Actuator
      *
      * @ORM\ManyToOne(targetEntity="Actuator")
      * @ORM\JoinColumns({
@@ -94,17 +94,17 @@ class ActuatorIntLog extends AbstractEntity
     }
 
     /**
-     * @return \Actuator
+     * @return Actuator
      */
-    public function getActuator(): \Actuator
+    public function getActuator(): Actuator
     {
         return $this->actuator;
     }
 
     /**
-     * @param \Actuator $actuator
+     * @param Actuator $actuator
      */
-    public function setActuator(\Actuator $actuator): void
+    public function setActuator(Actuator $actuator): void
     {
         $this->actuator = $actuator;
     }
