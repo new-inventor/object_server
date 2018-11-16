@@ -53,16 +53,20 @@ class ElementsService
         }
         if ($sensor->getLogType() === 'int') {
             return [
+                "$sensorId" => [
                 'value' => random_int(0, 100),
                 'level' => random_int(0, 3),
                 'type' => $sensor->getSensorType()->getTitle()
+                ]
             ];
 //            return $this->getSensorCurrentIntData($sensorId);
         } elseif ($sensor->getLogType() === 'bit') {
             return [
+                "$sensorId" => [
                 'value' => random_int(0, 1),
                 'level' => random_int(0, 3),
                 'type' => $sensor->getSensorType()->getTitle()
+                ]
             ];
 //            return $this->getSensorCurrentBitData($sensorId);
         }
