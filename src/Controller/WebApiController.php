@@ -166,7 +166,6 @@ class WebApiController extends AbstractController
                 if ($to === null) {
                     $to = new \DateTime();
                 }
-                var_dump($elementsService->getElementLog($parsedParams['element_id'], $from, $to));
                 return $this->getResponse([]);
             },
             $request,

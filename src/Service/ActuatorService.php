@@ -67,7 +67,6 @@ class ActuatorService
             ->setParameter('actuator', $actuator)
             ->getQuery()
             ->getResult(AbstractQuery::HYDRATE_ARRAY);
-        var_dump($res);
         return $res;
     }
 
@@ -111,7 +110,6 @@ class ActuatorService
             ->setMaxResults(1)
             ->getQuery()
             ->getResult(AbstractQuery::HYDRATE_ARRAY);
-        var_dump($res);
         return $res;
     }
 }
