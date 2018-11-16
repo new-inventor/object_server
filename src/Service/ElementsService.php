@@ -54,7 +54,7 @@ class ElementsService
         if ($sensor->getLogType() === 'int') {
             return [
                 "$sensorId" => [
-                'value' => random_int(0, 100),
+                'value' => (random_int(0, 100) / 50) + 24,
                 'level' => random_int(0, 3),
                 'type' => $sensor->getSensorType()->getTitle()
                 ]
@@ -157,7 +157,7 @@ class ElementsService
         foreach ($intIds as $id) {
             $res['sensor'][$id] = [
                 'sensor_id' => $id,
-                'value' => (random_int(0, 100) / 100) + 24,
+                'value' => (random_int(0, 100) / 50) + 24,
                 'level' => random_int(0, 3)
             ];
         }
