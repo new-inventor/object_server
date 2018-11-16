@@ -153,7 +153,7 @@ class WebServerApiService
     {
         $oldEntity = $this->em->find($entity, $id);
         if ($oldEntity === null) {
-            $oldEntity = new $entity(...$params);
+            $oldEntity = new $entity(...array_values($params));
         } else {
             $oldEntity->load($params);
         }

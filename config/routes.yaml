@@ -2,7 +2,7 @@ main:
    path: /
    controller: App\Controller\MainController::main
 check_for_updates:
-  path: /webApi/structure/updatesCheck
+   path: /webApi/structure/updatesCheck
    controller: App\Controller\WebApiController::hasUpdates
 update_structure:
    path: /webApi/structure/update

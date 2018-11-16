@@ -50,7 +50,7 @@ class SendDevices extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $request = new SendDevicesRequest(...$this->devisesService->all());
+        $request = new SendDevicesRequest(...array_values($this->devisesService->all()));
         $response = new SendDevicesResponse($this->apiService->getApiResponse($request));
         if ($response->isSuccess()) {
             $output->writeln('Synchronisation complete');
