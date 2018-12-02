@@ -31,7 +31,7 @@ class WebServerApiService
     /**
      * @var string
      */
-    private $token;
+    public $token;
     /**
      * @var string
      */
@@ -145,13 +145,18 @@ class WebServerApiService
     protected function createOrUpdateButch(string $entity, $list)
     {
         foreach ($list as $item) {
-            $this->createOrUpdateField($entity, (int)$item['id'], $item);
+            $item['id'] = (int)$item['id'];
+            if(array_key_exists('status', $item)){
+                $item['status'] = (int) $item['status'];
+            }
+            $this->createOrUpdateField($entity, $item['id'], $item);
         }
     }
 
     public function createOrUpdateField(string $entity, int $id, array $params)
     {
         $oldEntity = $this->em->find($entity, $id);
+        var_dump($entity, $params);
         if ($oldEntity === null) {
             $oldEntity = new $entity(...array_values($params));
         } else {

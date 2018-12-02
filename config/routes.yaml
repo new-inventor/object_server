@@ -1,22 +1,22 @@
 main:
-   path: /
-   controller: App\Controller\MainController::main
+  path: /
+  controller: App\Controller\MainController::main
 check_for_updates:
-   path: /webApi/structure/updatesCheck
-   controller: App\Controller\WebApiController::hasUpdates
+  path: /webApi/structure/updatesCheck
+  controller: App\Controller\WebApiController::hasUpdates
 update_structure:
-   path: /webApi/structure/update
-   controller: App\Controller\WebApiController::updateStructure
+  path: /webApi/structure/update
+  controller: App\Controller\WebApiController::updateStructure
 device_action:
-   path: /webApi/device/{action}
-   requirements:
-      action: 'list|link|unlink'
-   controller: App\Controller\WebApiController::deviceAction
+  path: /webApi/device/{action}
+  requirements:
+    action: 'list|link|unlink'
+  controller: App\Controller\WebApiController::deviceAction
 get_status:
-   path: /webApi/status/{peripheralType}
-   requirements:
-      peripheralType: 'sensor|actuator|controller|element|room'
-   controller: App\Controller\WebApiController::getStatus
+  path: /webApi/status/{peripheralType}
+  requirements:
+    peripheralType: 'sensor|actuator|controller|element|room'
+  controller: App\Controller\WebApiController::getStatus
 element_log:
   path: /webApi/element/log
   controller: App\Controller\WebApiController::getElementLog
@@ -34,8 +34,31 @@ room_current_data:
   controller: App\Controller\WebApiController::getRoomCurrentData
   methods: [POST, OPTIONS]
 sync_log:
-   path: /webApi/log/{peripheralType}/{logType}
-   requirements:
-      peripheralType: 'sensor|actuator|controller|element|room'
-      logType: 'int|bit|auto'
-   controller: App\Controller\WebApiController::syncLog
+  path: /webApi/log/{peripheralType}/{logType}
+  requirements:
+    peripheralType: 'sensor|actuator|controller|element|room'
+    logType: 'int|bit|auto'
+  controller: App\Controller\WebApiController::syncLog
+
+
+#update_controller_parameters:
+#  path: /localApi/controller/update_parameters
+#  controller: App\Controller\LocalApiController::updateParameters
+controller_init:
+  path: /localApi/controller/init
+  controller: App\Controller\LocalApiController::controllerInit
+add_log:
+  path: /localApi/log/{peripheralType}/{type}
+  requirements:
+    peripheralType: 'sensor|actuator'
+    type: 'int|byte'
+  controller: App\Controller\LocalApiController::addLog
+
+configure_controller:
+  path: /localApi/register_controller
+  controller: App\Controller\LocalApiController::registerController
+update_controller:
+  path: /localApi/controller/update/{mac}
+  requirements:
+    mac: '[a-h0-9]+'
+  controller: App\Controller\LocalApiController::updateController
