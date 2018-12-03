@@ -56,11 +56,9 @@ class ElementsService
             $value = $this->getSensorCurrentIntData($sensorId);
 
             return $value ? [
-                "$sensorId" => [
-                    'value' => $value,
-                    'level' => $this->getSensorLevel($sensorId, $value),
-                    'type' => $sensor->getSensorType()->getTitle()
-                ]
+                'value' => $value,
+                'level' => $this->getSensorLevel($sensorId, $value),
+                'type' => $sensor->getSensorType()->getTitle()
             ] : null;
         }
         throw new ApiError('Invalid log type.');
