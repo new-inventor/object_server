@@ -52,29 +52,63 @@ class ElementsService
             throw new ApiError("Undefined sensor id '$sensorId'.");
         }
         if ($sensor->getLogType() === 'int') {
-            return [
+            /** @var SensorIntLog[] $value */
+            $value = $this->getSensorCurrentIntData($sensorId);
+
+            return $value ? [
                 "$sensorId" => [
-                'value' => (random_int(0, 100) / 50) + 24,
-                'level' => random_int(0, 3),
-                'type' => $sensor->getSensorType()->getTitle()
+                    'value' => $value[0],
+                    'level' => $this->getSensorLevel($sensorId, $value[0]->getValue()),
+                    'type' => $sensor->getSensorType()->getTitle()
                 ]
-            ];
-//            return $this->getSensorCurrentIntData($sensorId);
-        } elseif ($sensor->getLogType() === 'bit') {
-            return [
-                "$sensorId" => [
-                'value' => random_int(0, 1),
-                'level' => random_int(0, 3),
-                'type' => $sensor->getSensorType()->getTitle()
-                ]
-            ];
-//            return $this->getSensorCurrentBitData($sensorId);
+            ] : null;
         }
         throw new ApiError('Invalid log type.');
     }
 
-    public function getSensorById(int $sensorId): Sensor
+    public function getSensorLevel(int $sensorId, int $value): int
     {
+        if ($sensorId === 91) {
+            return $value < 23 ? 0 :
+                $value >= 23 && $value < 26 ? 1 :
+                    $value >= 26 && $value < 27 ? 2 :
+                        $value >= 27 ? 3 : 3;
+        } elseif ($sensorId === 92) {
+            return 0;
+        } elseif ($sensorId === 93) {
+            return 0;
+        } elseif ($sensorId === 94) {
+            return 0;
+        } elseif ($sensorId === 95) {
+            return 0;
+        } elseif ($sensorId === 96) {
+            return 0;
+        } elseif ($sensorId === 97) {
+            return 0;
+        } elseif ($sensorId === 98) {
+            return 0;
+        } elseif ($sensorId === 99) {
+            return 0;
+        } elseif ($sensorId === 100) {
+            return 0;
+        } elseif ($sensorId === 101) {
+            return 0;
+        } elseif ($sensorId === 102) {
+            return 0;
+        } elseif ($sensorId === 103) {
+            return 0;
+        } elseif ($sensorId === 104) {
+            return 0;
+        }
+        return 0;
+    }
+
+    public function runTrigger(int $sensorId, $value)
+    {
+
+    }
+
+    public function getSensorById(int $sensorId): Sensor {
         /**
          * @var Sensor
          */

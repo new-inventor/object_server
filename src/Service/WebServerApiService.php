@@ -4,15 +4,24 @@
 namespace App\Service;
 
 
+use App\Api\WebServer\Request\GetElementsDataRequest;
 use App\Api\WebServer\Request\GetTypesRequest;
 use App\Api\WebServer\Request\InitObjectRequest;
 use App\Api\WebServer\Request\RequestInterface;
+use App\Api\WebServer\Response\GetElementsDataResponse;
 use App\Api\WebServer\Response\GetTypesResponse;
 use App\Api\WebServer\Response\InitObjectResponse;
+use App\Entity\Actuator;
 use App\Entity\ActuatorType;
+use App\Entity\Element;
+use App\Entity\ElementActuator;
+use App\Entity\ElementSensor;
+use App\Entity\ElementType;
 use App\Entity\EventTrigger;
 use App\Entity\EventType;
 use App\Entity\ObjectParameter;
+use App\Entity\Room;
+use App\Entity\Sensor;
 use App\Entity\SensorType;
 use Doctrine\ORM\EntityManagerInterface;
 use GuzzleHttp\Client;
@@ -156,7 +165,6 @@ class WebServerApiService
     public function createOrUpdateField(string $entity, int $id, array $params)
     {
         $oldEntity = $this->em->find($entity, $id);
-        var_dump($entity, $params);
         if ($oldEntity === null) {
             $oldEntity = new $entity(...array_values($params));
         } else {
@@ -164,6 +172,68 @@ class WebServerApiService
         }
         $this->em->persist($oldEntity);
         return $oldEntity;
+    }
+
+    public function syncElements()
+    {
+        $request = new GetElementsDataRequest();
+        $response = new GetElementsDataResponse($this->getApiResponse($request));
+        $this->createOrUpdateButch(Room::class, $response->getRooms());
+        $this->createOrUpdateButch(ElementType::class, $response->getElementTypes());
+        $this->createOrUpdateButch(EventType::class, $response->getEventTypes());
+        $this->em->flush();
+        foreach ($response->getElements() as $item) {
+            $oldEntity = $this->em->find(Element::class, $item['id']);
+            $type = $this->em->find(ElementType::class, $item['element_type_id']);
+            if(!$type){
+                continue;
+            }
+            $room = $this->em->find(Room::class, $item['room_id']);
+            if(!$room){
+                continue;
+            }
+            if ($oldEntity === null) {
+                $oldEntity = new Element(
+                    $item['id'],
+                    $type,
+                    $room,
+                    $item['parent_element_id']
+                );
+            } else {
+                $oldEntity->setElementType($type);
+                $oldEntity->setRoom($room);
+                $oldEntity->setParentElementId($item['parent_element_id']);
+            }
+            $this->em->persist($oldEntity);
+        }
+        $this->em->flush();
+        foreach ($response->getElementSensors() as $item) {
+            $element = $this->em->find(Element::class, $item['element_id']);
+            $sensor = $this->em->find(Sensor::class, $item['sensor_id']);
+            if(!$element || !$sensor){
+                continue;
+            }
+            $this->em->createQueryBuilder()->delete()->from(ElementSensor::class, 'es');
+            $entity = new ElementSensor(
+                $element,
+                $sensor
+            );
+            $this->em->persist($entity);
+        }
+        foreach ($response->getElementActuators() as $item) {
+            $this->em->createQueryBuilder()->delete()->from(ElementActuator::class, 'ea');
+            $element = $this->em->find(Element::class, $item['element_id']);
+            $actuator = $this->em->find(Actuator::class, $item['actuator_id']);
+            if(!$element || !$actuator){
+                continue;
+            }
+            $entity = new ElementActuator(
+                $actuator,
+                $element
+            );
+            $this->em->persist($entity);
+        }
+        $this->em->flush();
     }
 
 }

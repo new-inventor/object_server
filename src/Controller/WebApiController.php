@@ -60,7 +60,6 @@ class WebApiController extends AbstractController
                 if ($res === 0) {
                     exec(__DIR__ . '/../../bin/console app:send-devices');
                 }
-                var_dump($response);
                 return $this->getResponse($response);
             },
             $request

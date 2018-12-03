@@ -42,6 +42,17 @@ class ElementSensor extends AbstractEntity
     private $sensor;
 
     /**
+     * ElementSensor constructor.
+     * @param Element $element
+     * @param Sensor $sensor
+     */
+    public function __construct(Element $element, Sensor $sensor)
+    {
+        $this->element = $element;
+        $this->sensor = $sensor;
+    }
+
+    /**
      * @return int
      */
     public function getId(): int

@@ -33,7 +33,7 @@ class SensorIntLog extends AbstractEntity
      *
      * @ORM\Column(name="created", type="integer", nullable=true)
      */
-    private $created = '0';
+    private $created = null;
 
     /**
      * @var Sensor
@@ -44,6 +44,19 @@ class SensorIntLog extends AbstractEntity
      * })
      */
     private $sensor;
+
+    /**
+     * SensorIntLog constructor.
+     * @param int $value
+     * @param Sensor $sensor
+     */
+    public function __construct(int $value, Sensor $sensor)
+    {
+        $this->value = $value;
+        $this->created = (new \DateTime())->format('U');
+        $this->sensor = $sensor;
+    }
+
 
     /**
      * @return int
