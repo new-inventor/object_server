@@ -53,7 +53,7 @@ class ElementsService
         }
         if ($sensor->getLogType() === 'int') {
             /** @var int $value */
-            $value = $this->getSensorCurrentIntData($sensorId);
+            $value = $this->getSensorCurrentIntData($sensor);
 
             return $value ? [
                 'value' => $value,
@@ -123,7 +123,7 @@ class ElementsService
         return null;
     }
 
-    public function getSensorCurrentIntData(int $sensorId)
+    public function getSensorCurrentIntData(Sensor $sensor)
     {
         /**
          * @var SensorIntLog[]
@@ -131,19 +131,20 @@ class ElementsService
         $res = $this->em->createQueryBuilder()
             ->select('s')
             ->from(SensorIntLog::class, 's')
-            ->where('s.id = :id')
-            ->setParameter('id', $sensorId)
+            ->where('s.sensor = :id')
+            ->setParameter('sensor', $sensor)
             ->addOrderBy('s.created', 'desc')
             ->setMaxResults(1)
             ->getQuery()
             ->getResult();
+
         if (\count($res) > 0) {
             return $res[0]->getValue();
         }
         return null;
     }
 
-    public function getSensorCurrentBitData(int $sensorId)
+    public function getSensorCurrentBitData(Sensor $sensor)
     {
         /**
          * @var SensorBitLog[]
@@ -151,8 +152,8 @@ class ElementsService
         $res = $this->em->createQueryBuilder()
             ->select('s')
             ->from(SensorBitLog::class, 's')
-            ->where('s.id = :id')
-            ->setParameter('id', $sensorId)
+            ->where('s.sensor = :id')
+            ->setParameter('sensor', $sensor)
             ->addOrderBy('s.created', 'desc')
             ->setMaxResults(1)
             ->getQuery()
