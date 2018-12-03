@@ -52,13 +52,13 @@ class ElementsService
             throw new ApiError("Undefined sensor id '$sensorId'.");
         }
         if ($sensor->getLogType() === 'int') {
-            /** @var SensorIntLog[] $value */
+            /** @var int $value */
             $value = $this->getSensorCurrentIntData($sensorId);
 
             return $value ? [
                 "$sensorId" => [
-                    'value' => $value[0],
-                    'level' => $this->getSensorLevel($sensorId, $value[0]->getValue()),
+                    'value' => $value,
+                    'level' => $this->getSensorLevel($sensorId, $value),
                     'type' => $sensor->getSensorType()->getTitle()
                 ]
             ] : null;
@@ -133,7 +133,7 @@ class ElementsService
         $res = $this->em->createQueryBuilder()
             ->select('s')
             ->from(SensorIntLog::class, 's')
-            ->where('s.sensor_id = :id')
+            ->where('s.id = :id')
             ->setParameter('id', $sensorId)
             ->addOrderBy('s.created', 'desc')
             ->setMaxResults(1)
@@ -153,7 +153,7 @@ class ElementsService
         $res = $this->em->createQueryBuilder()
             ->select('s')
             ->from(SensorBitLog::class, 's')
-            ->where('s.sensor_id = :id')
+            ->where('s.id = :id')
             ->setParameter('id', $sensorId)
             ->addOrderBy('s.created', 'desc')
             ->setMaxResults(1)
@@ -178,22 +178,18 @@ class ElementsService
             }),
             'id'
         );
-        $bitIds = array_column(
-            array_filter($elementSensors, function ($value) {
-                return $value['log_type'] === 'bit';
-            }),
-            'id'
-        );
+//        $bitIds = array_column(
+//            array_filter($elementSensors, function ($value) {
+//                return $value['log_type'] === 'bit';
+//            }),
+//            'id'
+//        );
         $res = ['sensor' => []];
-        foreach ($bitIds as $id) {
-            $res['sensor'][$id] = ['sensor_id' => $id, 'value' => random_int(0, 1), 'level' => 0];
-        }
+//        foreach ($bitIds as $id) {
+//            $res['sensor'][$id] = ['sensor_id' => $id, 'value' => random_int(0, 1), 'level' => 0];
+//        }
         foreach ($intIds as $id) {
-            $res['sensor'][$id] = [
-                'sensor_id' => $id,
-                'value' => (random_int(0, 100) / 50) + 24,
-                'level' => random_int(0, 3)
-            ];
+            $res['sensor'][$id] = $this->getSensorCurrentData($id);
         }
 
         return $res;
