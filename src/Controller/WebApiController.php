@@ -17,7 +17,7 @@ use Symfony\Component\HttpKernel\Log\Logger;
 
 class WebApiController extends AbstractController
 {
-    private $controllerHost = 'http://10.2.1.155:8001';
+    private $controllerHost = 'http://10.2.1.155:8001/';
     /**
      * @var EntityManagerInterface
      */
@@ -256,7 +256,9 @@ class WebApiController extends AbstractController
 
     public function actuatorSet(int $actuator_id, int $level) {
         $client  = new Client();
+        var_dump($actuator_id, $level);
         $levelName = $level > 0 ? 'HIGH' : 'LOW';
         $client->post($this->controllerHost . 'actuator/' . $actuator_id . '/' . $levelName);
+        return $this->getResponse(['actuator_id' => $actuator_id, 'level' => $level]);
     }
 }
