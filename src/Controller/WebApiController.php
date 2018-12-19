@@ -17,7 +17,7 @@ use Symfony\Component\HttpKernel\Log\Logger;
 
 class WebApiController extends AbstractController
 {
-    private $controllerHost = 'http://10.2.1.155:8001/';
+    private $controllerHost = 'http://192.168.0.110:8001/';
     /**
      * @var EntityManagerInterface
      */
@@ -124,16 +124,16 @@ class WebApiController extends AbstractController
                 foreach($sensors['sensor'] as $id => $value) {
                     $level = $value['level'];
                     if($id === 96){
-                        $res = $client->post($this->controllerHost . '/actuator/2/' . ($level > 1 ? 'HIGH' : 'LOW'));
+                        $res = $client->post($this->controllerHost . 'actuator/1/' . ($level === 0 ? 'HIGH' : 'LOW'));
                         if($res->getStatusCode() !== 200) {
                             return $this->getResponse($level);
                         }
                     }
                     if($id === 92 || $id === 93){
-                        $res = $client->post($this->controllerHost . 'actuator/0/' . ($level > 1 ? 'HIGH' : 'LOW'));
+                        $res = $client->post($this->controllerHost . 'actuator/0/' . ($level === 0 ? 'HIGH' : 'LOW'));
                     }
-                    if($id === 94){
-                        $res = $client->post($this->controllerHost . 'actuator/1/' . ($level > 1 ? 'HIGH' : 'LOW'));
+                    if($id === 100){
+                        $res = $client->post($this->controllerHost . 'actuator/2/' . ($level === 0 ? 'HIGH' : 'LOW'));
                     }
                 }
                 return $this->getResponse($elementsService->getElementCurrentData($parsedParams['element_id']));
@@ -148,23 +148,21 @@ class WebApiController extends AbstractController
         $client  = new Client();
         return $this->tryToHandle(
             function (Request $request, ElementsService $elementsService) use ($client){
-                var_dump($request->request->get('json'));
                 $parsedParams = $this->parseJson($request->request->get('json'));
                 if ($parsedParams['item'] === 'sensor') {
                     $item = $elementsService->getSensorCurrentData($parsedParams['item_id']);
                     $level = $item['level'];
-                    var_dump($level);
-                    if('' . $parsedParams['item_id'] === '96'){
-                        $res = $client->post($this->controllerHost . 'actuator/2/' . ($level > 1 ? 'LOW' : 'HIGH'));
+                    if('' . $parsedParams['item_id'] === '92'){
+                        $res = $client->post($this->controllerHost . 'actuator/0/' . ($level > 1 ? 'LOW' : 'HIGH'));
                         if($res->getStatusCode() !== 200) {
                             return $this->getResponse($level);
                         }
                     }
-                    if('' . $parsedParams['item_id'] === '92' || ''. $parsedParams['item_id'] === '93'){
-                        $client->post($this->controllerHost . 'actuator/0/' . ($level > 1 ? 'LOW' : 'HIGH'));
-                    }
-                    if('' . $parsedParams['item_id'] === '94'){
+                    if('' . $parsedParams['item_id'] === '96' || ''. $parsedParams['item_id'] === '93'){
                         $client->post($this->controllerHost . 'actuator/1/' . ($level > 1 ? 'LOW' : 'HIGH'));
+                    }
+                    if('' . $parsedParams['item_id'] === '100'){
+                        $client->post($this->controllerHost . 'actuator/2/' . ($level > 1 ? 'LOW' : 'HIGH'));
                     }
                     return $this->getResponse($item);
                 } elseif ($parsedParams['item'] === 'actuator') {
@@ -255,10 +253,13 @@ class WebApiController extends AbstractController
     }
 
     public function actuatorSet(int $actuator_id, int $level) {
-        $client  = new Client();
-        var_dump($actuator_id, $level);
+        $actuator_id--;
+        $client = new Client();
         $levelName = $level > 0 ? 'HIGH' : 'LOW';
-        $client->post($this->controllerHost . 'actuator/' . $actuator_id . '/' . $levelName);
-        return $this->getResponse(['actuator_id' => $actuator_id, 'level' => $level]);
+        $result = $client->post($this->controllerHost . 'actuator/' . $actuator_id . '/' . $levelName);
+        if($result->getStatusCode() === 200){
+            return $this->getResponse(['succes' => 'true', 'actuator_id' => $actuator_id, 'level' => $level]);
+        }
+        return $this->getResponse(['succes' => 'false', 'actuator_id' => $actuator_id, 'level' => $level]);
     }
 }

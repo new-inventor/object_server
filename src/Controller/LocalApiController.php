@@ -41,12 +41,10 @@ class LocalApiController
             if ($type === 'int') {
                 foreach ($data as $id => $values) {
                     $values = array_values($values);
-                    $value = $id === 91 || $id === 96 ? (int)$values[0] : ((int)$values[0] + (int)$values[1]) / 2;
-                    $level = $elementsService->getSensorLevel($id, $value);
-                    if($level > 0) {
-                        $request = new SensorValueForEventRequest($id, $value, $level);
-                        $apiService->getApiResponse($request);
-                    }
+                    $value = $id === 91 ? (int)$values[0] : ((int)$values[0] + (int)$values[1]) / 2;
+                    $level = $elementsService->getSensorLevel($id, ...$values);
+                    $request = new SensorValueForEventRequest($id, $value, $level);
+                    $apiService->getApiResponse($request);
                     $sensor = $this->em->find(Sensor::class, $id);
                     $record = new SensorIntLog($value, $sensor);
                     $this->em->persist($record);

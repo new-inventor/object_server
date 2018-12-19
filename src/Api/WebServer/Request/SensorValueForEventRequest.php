@@ -6,7 +6,7 @@ namespace App\Api\WebServer\Request;
 
 class SensorValueForEventRequest extends AbstractRequest
 {
-    protected $uri = '/sensor/pushEvent';
+    protected $uri = '/events/pushEvent';
 
     /**
      * @var int

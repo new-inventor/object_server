@@ -84,13 +84,14 @@ class ElementsService
         throw new ApiError('Invalid log type.');
     }
 
-    public function getSensorLevel(int $sensorId, int $value): int
+    public function getSensorLevel(int $sensorId, ...$values): int
     {
         if ($sensorId === 91) {
+            $value = (int)$values[0];
             if($value < 23){
                 return 0;
             }
-            if($value >= 23 && $value < 26) {
+            if($value >= 25 && $value < 26) {
                 return 1;
             }
             if($value >= 26 && $value < 27) {
@@ -100,19 +101,21 @@ class ElementsService
                 return 3;
             }
         } elseif ($sensorId === 92) {
-            if($value < 240){
+            $value = array_key_exists(1, $values) ? ((int)$values[0] + (int)$values[1]) / 2 : (int)$values[0];
+            if($value < 330){
                 return 0;
             }
-            if($value >= 240 && $value < 280) {
+            if($value >= 330 && $value < 400) {
                 return 1;
             }
-            if($value >= 280 && $value < 400) {
+            if($value >= 450 && $value < 500) {
                 return 2;
             }
-            if($value >= 400) {
+            if($value >= 500) {
                 return 3;
             }
         } elseif ($sensorId === 93) {
+            $value = array_key_exists(1, $values) ? ((int)$values[0] + (int)$values[1]) / 2 : (int)$values[0];
             if($value < 240){
                 return 0;
             }
@@ -126,6 +129,7 @@ class ElementsService
                 return 3;
             }
         } elseif ($sensorId === 94) {
+            $value = array_key_exists(1, $values) ? ((int)$values[0] + (int)$values[1]) / 2 : (int)$values[0];
             if($value < 300){
                 return 0;
             }
@@ -141,6 +145,7 @@ class ElementsService
         } elseif ($sensorId === 95) {
             return 0;
         } elseif ($sensorId === 96) {
+            $value = (int)$values[0];
             if($value > 900){
                 return 0;
             }
@@ -158,23 +163,28 @@ class ElementsService
         } elseif ($sensorId === 98) {
             return 0;
         } elseif ($sensorId === 99) {
-            if($value < 200){
+            return 0;
+        } elseif ($sensorId === 100) {
+//            $f = fopen('test.txt', 'a');
+//            fwrite($f, '' . $values[0] . '  ' . $values[1]);
+//            fclose($f);
+            $value = array_key_exists(1, $values) ? ((int)$values[0] + (int)$values[1]) / 2 : (int)$values[0];
+            if($value < 7000){
                 return 0;
             }
-            if($value >= 200 && $value < 300) {
+            if($value >= 7000 && $value < 15000) {
                 return 1;
             }
-            if($value >= 300 && $value < 400) {
+            if($value >= 15000 && $value < 30000) {
                 return 2;
             }
-            if($value >= 400) {
+            if($value >= 30000) {
                 return 3;
             }
-        } elseif ($sensorId === 100) {
-            return 0;
         } elseif ($sensorId === 101) {
             return 0;
         } elseif ($sensorId === 102) {
+            $value = array_key_exists(1, $values) ? ((int)$values[0] + (int)$values[1]) / 2 : (int)$values[0];
             if($value < 3000){
                 return 0;
             }
@@ -190,6 +200,7 @@ class ElementsService
         } elseif ($sensorId === 103) {
             return 0;
         } elseif ($sensorId === 104) {
+            $value = array_key_exists(1, $values) ? ((int)$values[0] + (int)$values[1]) / 2 : (int)$values[0];
             if($value < 3000){
                 return 0;
             }
