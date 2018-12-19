@@ -43,6 +43,13 @@ class Actuator extends AbstractEntity
     private $controller;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="log_type", type="string", nullable=true)
+     */
+    private $logType;
+
+    /**
      * Actuator constructor.
      * @param ActuatorType $actuatorType
      * @param Controller $controller
@@ -99,5 +106,21 @@ class Actuator extends AbstractEntity
     public function setController(Controller $controller): void
     {
         $this->controller = $controller;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLogType(): string
+    {
+        return $this->logType;
+    }
+
+    /**
+     * @param string $logType
+     */
+    public function setLogType(string $logType): void
+    {
+        $this->logType = $logType;
     }
 }

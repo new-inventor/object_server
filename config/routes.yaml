@@ -24,7 +24,7 @@ element_log:
 sensor_current_data:
   path: /webApi/sensor/current_data
   controller: App\Controller\WebApiController::getSensorCurrentData
-  methods: [POST, OPTIONS]
+  methods: [POST, GET, OPTIONS]
 element_current_data:
   path: /webApi/element/current_data
   controller: App\Controller\WebApiController::getElementCurrentData
@@ -44,6 +44,12 @@ sync_log:
 #update_controller_parameters:
 #  path: /localApi/controller/update_parameters
 #  controller: App\Controller\LocalApiController::updateParameters
+actuator_set:
+  path: /webApi/actuator/set/{actuator_id}/{level}
+  controller: App\Controller\WebApiController::actuatorSet
+  requirements:
+    actuator_id: '\d+'
+    level: '\d+'
 controller_init:
   path: /localApi/controller/init
   controller: App\Controller\LocalApiController::controllerInit

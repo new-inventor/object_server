@@ -5,6 +5,7 @@ namespace App\Service;
 
 
 use App\Api\Error\ApiError;
+use App\Entity\Actuator;
 use App\Entity\Element;
 use App\Entity\Sensor;
 use App\Entity\SensorBitLog;
@@ -45,6 +46,25 @@ class ElementsService
         }
     }
 
+    public function getActuatorCurrentData(int $actuatorId)
+    {
+        $actuator = $this->getActuatorById($actuatorId);
+        if ($actuator === null) {
+            throw new ApiError("Undefined actuator id '$actuatorId'.");
+        }
+        if ($actuator->getLogType() === 'int') {
+            /** @var int $value */
+            $value = $this->getActuatorCurrentIntData($actuator);
+
+            return $value ? [
+                'value' => $value,
+                'level' => $this->getSensorLevel($actuatorId, $value),
+                'type' => $actuator->getActuatorType()->getTitle()
+            ] : null;
+        }
+        throw new ApiError('Invalid log type.');
+    }
+
     public function getSensorCurrentData(int $sensorId)
     {
         $sensor = $this->getSensorById($sensorId);
@@ -67,36 +87,121 @@ class ElementsService
     public function getSensorLevel(int $sensorId, int $value): int
     {
         if ($sensorId === 91) {
-            return $value < 23 ? 0 :
-                $value >= 23 && $value < 26 ? 1 :
-                    $value >= 26 && $value < 27 ? 2 :
-                        $value >= 27 ? 3 : 3;
+            if($value < 23){
+                return 0;
+            }
+            if($value >= 23 && $value < 26) {
+                return 1;
+            }
+            if($value >= 26 && $value < 27) {
+                return 2;
+            }
+            if($value >= 27) {
+                return 3;
+            }
         } elseif ($sensorId === 92) {
-            return 0;
+            if($value < 240){
+                return 0;
+            }
+            if($value >= 240 && $value < 280) {
+                return 1;
+            }
+            if($value >= 280 && $value < 400) {
+                return 2;
+            }
+            if($value >= 400) {
+                return 3;
+            }
         } elseif ($sensorId === 93) {
-            return 0;
+            if($value < 240){
+                return 0;
+            }
+            if($value >= 240 && $value < 280) {
+                return 1;
+            }
+            if($value >= 280 && $value < 400) {
+                return 2;
+            }
+            if($value >= 400) {
+                return 3;
+            }
         } elseif ($sensorId === 94) {
-            return 0;
+            if($value < 300){
+                return 0;
+            }
+            if($value >= 300 && $value < 450) {
+                return 1;
+            }
+            if($value >= 450 && $value < 600) {
+                return 2;
+            }
+            if($value >= 600) {
+                return 3;
+            }
         } elseif ($sensorId === 95) {
             return 0;
         } elseif ($sensorId === 96) {
-            return 0;
+            if($value > 900){
+                return 0;
+            }
+            if($value > 600 && $value <=900) {
+                return 1;
+            }
+            if($value > 400 && $value <= 600) {
+                return 2;
+            }
+            if($value <= 400) {
+                return 3;
+            }
         } elseif ($sensorId === 97) {
             return 0;
         } elseif ($sensorId === 98) {
             return 0;
         } elseif ($sensorId === 99) {
-            return 0;
+            if($value < 200){
+                return 0;
+            }
+            if($value >= 200 && $value < 300) {
+                return 1;
+            }
+            if($value >= 300 && $value < 400) {
+                return 2;
+            }
+            if($value >= 400) {
+                return 3;
+            }
         } elseif ($sensorId === 100) {
             return 0;
         } elseif ($sensorId === 101) {
             return 0;
         } elseif ($sensorId === 102) {
-            return 0;
+            if($value < 3000){
+                return 0;
+            }
+            if($value >= 3000 && $value < 5000) {
+                return 1;
+            }
+            if($value >= 5000 && $value < 10000) {
+                return 2;
+            }
+            if($value >= 10000) {
+                return 3;
+            }
         } elseif ($sensorId === 103) {
             return 0;
         } elseif ($sensorId === 104) {
-            return 0;
+            if($value < 3000){
+                return 0;
+            }
+            if($value >= 3000 && $value < 5000) {
+                return 1;
+            }
+            if($value >= 5000 && $value < 10000) {
+                return 2;
+            }
+            if($value >= 10000) {
+                return 3;
+            }
         }
         return 0;
     }
@@ -123,6 +228,23 @@ class ElementsService
         return null;
     }
 
+    public function getActuatorById(int $actuatorId): Actuator {
+        /**
+         * @var Sensor
+         */
+        $res = $this->em->createQueryBuilder()
+            ->select('a')
+            ->from(Actuator::class, 'a')
+            ->where('a.id = :id')
+            ->setParameter('id', $actuatorId)
+            ->getQuery()
+            ->getResult();
+        if (\count($res) > 0) {
+            return $res[0];
+        }
+        return null;
+    }
+
     public function getSensorCurrentIntData(Sensor $sensor)
     {
         /**
@@ -131,7 +253,7 @@ class ElementsService
         $res = $this->em->createQueryBuilder()
             ->select('s')
             ->from(SensorIntLog::class, 's')
-            ->where('s.sensor = :id')
+            ->where('s.sensor = :sensor')
             ->setParameter('sensor', $sensor)
             ->addOrderBy('s.created', 'desc')
             ->setMaxResults(1)
@@ -144,6 +266,28 @@ class ElementsService
         return null;
     }
 
+    public function getActuatorCurrentIntData(Actuator $actuator)
+    {
+        return 0;
+//        /**
+//         * @var ActuatorIntLog[]
+//         */
+//        $res = $this->em->createQueryBuilder()
+//            ->select('a')
+//            ->from(ActuatorIntLog::class, 'a')
+//            ->where('a.actuator = :actuator')
+//            ->setParameter('actuator', $actuator)
+//            ->addOrderBy('a.created', 'desc')
+//            ->setMaxResults(1)
+//            ->getQuery()
+//            ->getResult();
+//
+//        if (\count($res) > 0) {
+//            return $res[0]->getValue();
+//        }
+//        return null;
+    }
+
     public function getSensorCurrentBitData(Sensor $sensor)
     {
         /**
@@ -152,7 +296,7 @@ class ElementsService
         $res = $this->em->createQueryBuilder()
             ->select('s')
             ->from(SensorBitLog::class, 's')
-            ->where('s.sensor = :id')
+            ->where('s.sensor = :sensor')
             ->setParameter('sensor', $sensor)
             ->addOrderBy('s.created', 'desc')
             ->setMaxResults(1)
@@ -171,8 +315,15 @@ class ElementsService
             throw new ApiError("No element with id '$elementId'.");
         }
         $elementSensors = $this->getElementSensors($element);
-        $intIds = array_column(
+        $elementActuators = $this->getElementActuators($element);
+        $intSensorsIds = array_column(
             array_filter($elementSensors, function ($value) {
+                return $value['log_type'] === 'int';
+            }),
+            'id'
+        );
+        $intActuatorsIds = array_column(
+            array_filter($elementActuators, function ($value) {
                 return $value['log_type'] === 'int';
             }),
             'id'
@@ -183,12 +334,15 @@ class ElementsService
 //            }),
 //            'id'
 //        );
-        $res = ['sensor' => []];
+        $res = ['sensor' => [], 'actuator' => []];
 //        foreach ($bitIds as $id) {
 //            $res['sensor'][$id] = ['sensor_id' => $id, 'value' => random_int(0, 1), 'level' => 0];
 //        }
-        foreach ($intIds as $id) {
+        foreach ($intSensorsIds as $id) {
             $res['sensor'][$id] = $this->getSensorCurrentData($id);
+        }
+        foreach ($intActuatorsIds as $id) {
+            $res['actuator'][$id] = $this->getActuatorCurrentData($id);
         }
 
         return $res;

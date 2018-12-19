@@ -10,12 +10,14 @@ use App\Service\DevisesService;
 use App\Service\ElementsService;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\ResultSetMapping;
+use GuzzleHttp\Client;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Log\Logger;
 
 class WebApiController extends AbstractController
 {
+    private $controllerHost = 'http://10.2.1.155:8001';
     /**
      * @var EntityManagerInterface
      */
@@ -114,9 +116,26 @@ class WebApiController extends AbstractController
 
     public function getElementCurrentData(Request $request, ElementsService $elementsService)
     {
+        $client  = new Client();
         return $this->tryToHandle(
-            function (Request $request, ElementsService $elementsService) {
+            function (Request $request, ElementsService $elementsService) use ($client) {
                 $parsedParams = $this->parseJson($request->request->get('json'));
+                $sensors = $elementsService->getElementCurrentData($parsedParams['element_id']);
+                foreach($sensors['sensor'] as $id => $value) {
+                    $level = $value['level'];
+                    if($id === 96){
+                        $res = $client->post($this->controllerHost . '/actuator/2/' . ($level > 1 ? 'HIGH' : 'LOW'));
+                        if($res->getStatusCode() !== 200) {
+                            return $this->getResponse($level);
+                        }
+                    }
+                    if($id === 92 || $id === 93){
+                        $res = $client->post($this->controllerHost . 'actuator/0/' . ($level > 1 ? 'HIGH' : 'LOW'));
+                    }
+                    if($id === 94){
+                        $res = $client->post($this->controllerHost . 'actuator/1/' . ($level > 1 ? 'HIGH' : 'LOW'));
+                    }
+                }
                 return $this->getResponse($elementsService->getElementCurrentData($parsedParams['element_id']));
             },
             $request,
@@ -126,11 +145,28 @@ class WebApiController extends AbstractController
 
     public function getSensorCurrentData(Request $request, ElementsService $elementsService)
     {
+        $client  = new Client();
         return $this->tryToHandle(
-            function (Request $request, ElementsService $elementsService) {
+            function (Request $request, ElementsService $elementsService) use ($client){
+                var_dump($request->request->get('json'));
                 $parsedParams = $this->parseJson($request->request->get('json'));
                 if ($parsedParams['item'] === 'sensor') {
-                    return $this->getResponse($elementsService->getSensorCurrentData($parsedParams['item_id']));
+                    $item = $elementsService->getSensorCurrentData($parsedParams['item_id']);
+                    $level = $item['level'];
+                    var_dump($level);
+                    if('' . $parsedParams['item_id'] === '96'){
+                        $res = $client->post($this->controllerHost . 'actuator/2/' . ($level > 1 ? 'LOW' : 'HIGH'));
+                        if($res->getStatusCode() !== 200) {
+                            return $this->getResponse($level);
+                        }
+                    }
+                    if('' . $parsedParams['item_id'] === '92' || ''. $parsedParams['item_id'] === '93'){
+                        $client->post($this->controllerHost . 'actuator/0/' . ($level > 1 ? 'LOW' : 'HIGH'));
+                    }
+                    if('' . $parsedParams['item_id'] === '94'){
+                        $client->post($this->controllerHost . 'actuator/1/' . ($level > 1 ? 'LOW' : 'HIGH'));
+                    }
+                    return $this->getResponse($item);
                 } elseif ($parsedParams['item'] === 'actuator') {
                     return $this->getResponse([]);
                 }
@@ -216,5 +252,11 @@ class WebApiController extends AbstractController
             },
             $request
         );
+    }
+
+    public function actuatorSet(int $actuator_id, int $level) {
+        $client  = new Client();
+        $levelName = $level > 0 ? 'HIGH' : 'LOW';
+        $client->post($this->controllerHost . 'actuator/' . $actuator_id . '/' . $levelName);
     }
 }
